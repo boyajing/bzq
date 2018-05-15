@@ -1,0 +1,83 @@
+<?xml version="1.0"?>
+
+<!DOCTYPE taglib PUBLIC
+        "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.1//EN"
+        "http://java.sun.com/j2ee/dtds/web-jsptaglibrary_1_1.dtd">
+<taglib>
+    <tlibversion>1.0</tlibversion>
+    <jspversion>1.1</jspversion>
+    <shortname>nantian tags</shortname>
+    <info>nantian tags</info>
+
+    <!-- code -->
+    <tag>
+        <name>code</name>
+        <tagclass>com.nantian.utils.tag.SysCodeTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>ctype</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>index</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>codeValue</name>
+        <tagclass>com.nantian.utils.tag.SysCodeValueTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>ctype</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+        <attribute>
+            <name>index</name>
+            <required>false</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>username</name>
+        <tagclass>com.nantian.utils.tag.SysUserNameTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>userid</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>cusname</name>
+        <tagclass>com.nantian.utils.tag.SysCustomerNameTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>cuscomerid</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>coursename</name>
+        <tagclass>com.nantian.utils.tag.SysCourseNameTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>courseid</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
+        <name>orgname</name>
+        <tagclass>com.nantian.utils.tag.SysJedaOrgTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>orgid</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+</taglib>

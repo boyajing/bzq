@@ -1,0 +1,508 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nantian.dao.TCustomerBasicMapper">
+  <resultMap id="BaseResultMap" type="com.nantian.dao.TCustomerBasic">
+    <id column="CUSTOMER_ID" jdbcType="VARCHAR" property="customerId" />
+    <result column="CUSTOMER_NAME" jdbcType="VARCHAR" property="customerName" />
+    <result column="CERTIFICATE_FLAG" jdbcType="VARCHAR" property="certificateFlag" />
+    <result column="BUSINESS_NO" jdbcType="VARCHAR" property="businessNo" />
+    <result column="REGISTRATION_DATE" jdbcType="DATE" property="registrationDate" />
+    <result column="IFLOAN_CARD" jdbcType="VARCHAR" property="ifloanCard" />
+    <result column="ENTERPRISE_TYPE" jdbcType="VARCHAR" property="enterpriseType" />
+    <result column="ACTUAL_CONTROLLER_TYPE" jdbcType="VARCHAR" property="actualControllerType" />
+    <result column="ACTUAL_CONTROLLER" jdbcType="VARCHAR" property="actualController" />
+    <result column="COMPANYE_NAME" jdbcType="VARCHAR" property="companyeName" />
+    <result column="CREDENTIAL_NO" jdbcType="VARCHAR" property="credentialNo" />
+    <result column="TAX_NO" jdbcType="VARCHAR" property="taxNo" />
+    <result column="LOANCARD_NO" jdbcType="VARCHAR" property="loancardNo" />
+    <result column="CUSTOMER_ORG" jdbcType="VARCHAR" property="customerOrg" />
+    <result column="CUSTOMER_DEPT" jdbcType="VARCHAR" property="customerDept" />
+    <result column="CREATER" jdbcType="VARCHAR" property="creater" />
+    <result column="CTEATE_TIME" jdbcType="TIMESTAMP" property="cteateTime" />
+    <result column="UPDATER" jdbcType="VARCHAR" property="updater" />
+    <result column="UPDATE_TIME" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="CUSTOMER_PE" jdbcType="VARCHAR" property="customerPe" />
+    <result column="IF_INVEST" jdbcType="VARCHAR" property="ifInvest" />
+    <result column="IF_HARMFUL" jdbcType="VARCHAR" property="ifHarmful" />
+    <result column="CUSTOMER_COMPANY" jdbcType="VARCHAR" property="customerCompany" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    CUSTOMER_ID, CUSTOMER_NAME, CERTIFICATE_FLAG, BUSINESS_NO, REGISTRATION_DATE, IFLOAN_CARD, 
+    ENTERPRISE_TYPE, ACTUAL_CONTROLLER_TYPE, ACTUAL_CONTROLLER, COMPANYE_NAME, CREDENTIAL_NO, 
+    TAX_NO, LOANCARD_NO, CUSTOMER_ORG, CUSTOMER_DEPT, CREATER, CTEATE_TIME, UPDATER, 
+    UPDATE_TIME, CUSTOMER_PE, IF_INVEST, IF_HARMFUL, CUSTOMER_COMPANY
+  </sql>
+  <select id="selectByExample" parameterType="com.nantian.dao.TCustomerBasicExample" resultMap="BaseResultMap">
+    <include refid="OracleDialectPrefix" />
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from T_CUSTOMER_BASIC
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+    <include refid="OracleDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from T_CUSTOMER_BASIC
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from T_CUSTOMER_BASIC
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.nantian.dao.TCustomerBasicExample">
+    delete from T_CUSTOMER_BASIC
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.nantian.dao.TCustomerBasic">
+    insert into T_CUSTOMER_BASIC (CUSTOMER_ID, CUSTOMER_NAME, CERTIFICATE_FLAG, 
+      BUSINESS_NO, REGISTRATION_DATE, IFLOAN_CARD, 
+      ENTERPRISE_TYPE, ACTUAL_CONTROLLER_TYPE, ACTUAL_CONTROLLER, 
+      COMPANYE_NAME, CREDENTIAL_NO, TAX_NO, 
+      LOANCARD_NO, CUSTOMER_ORG, CUSTOMER_DEPT, 
+      CREATER, CTEATE_TIME, UPDATER, 
+      UPDATE_TIME, CUSTOMER_PE, IF_INVEST, 
+      IF_HARMFUL, CUSTOMER_COMPANY)
+    values (#{customerId,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{certificateFlag,jdbcType=VARCHAR}, 
+      #{businessNo,jdbcType=VARCHAR}, #{registrationDate,jdbcType=DATE}, #{ifloanCard,jdbcType=VARCHAR}, 
+      #{enterpriseType,jdbcType=VARCHAR}, #{actualControllerType,jdbcType=VARCHAR}, #{actualController,jdbcType=VARCHAR}, 
+      #{companyeName,jdbcType=VARCHAR}, #{credentialNo,jdbcType=VARCHAR}, #{taxNo,jdbcType=VARCHAR}, 
+      #{loancardNo,jdbcType=VARCHAR}, #{customerOrg,jdbcType=VARCHAR}, #{customerDept,jdbcType=VARCHAR}, 
+      #{creater,jdbcType=VARCHAR}, #{cteateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{customerPe,jdbcType=VARCHAR}, #{ifInvest,jdbcType=VARCHAR}, 
+      #{ifHarmful,jdbcType=VARCHAR}, #{customerCompany,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nantian.dao.TCustomerBasic">
+    insert into T_CUSTOMER_BASIC
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        CUSTOMER_ID,
+      </if>
+      <if test="customerName != null">
+        CUSTOMER_NAME,
+      </if>
+      <if test="certificateFlag != null">
+        CERTIFICATE_FLAG,
+      </if>
+      <if test="businessNo != null">
+        BUSINESS_NO,
+      </if>
+      <if test="registrationDate != null">
+        REGISTRATION_DATE,
+      </if>
+      <if test="ifloanCard != null">
+        IFLOAN_CARD,
+      </if>
+      <if test="enterpriseType != null">
+        ENTERPRISE_TYPE,
+      </if>
+      <if test="actualControllerType != null">
+        ACTUAL_CONTROLLER_TYPE,
+      </if>
+      <if test="actualController != null">
+        ACTUAL_CONTROLLER,
+      </if>
+      <if test="companyeName != null">
+        COMPANYE_NAME,
+      </if>
+      <if test="credentialNo != null">
+        CREDENTIAL_NO,
+      </if>
+      <if test="taxNo != null">
+        TAX_NO,
+      </if>
+      <if test="loancardNo != null">
+        LOANCARD_NO,
+      </if>
+      <if test="customerOrg != null">
+        CUSTOMER_ORG,
+      </if>
+      <if test="customerDept != null">
+        CUSTOMER_DEPT,
+      </if>
+      <if test="creater != null">
+        CREATER,
+      </if>
+      <if test="cteateTime != null">
+        CTEATE_TIME,
+      </if>
+      <if test="updater != null">
+        UPDATER,
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME,
+      </if>
+      <if test="customerPe != null">
+        CUSTOMER_PE,
+      </if>
+      <if test="ifInvest != null">
+        IF_INVEST,
+      </if>
+      <if test="ifHarmful != null">
+        IF_HARMFUL,
+      </if>
+      <if test="customerCompany != null">
+        CUSTOMER_COMPANY,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="customerId != null">
+        #{customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="customerName != null">
+        #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateFlag != null">
+        #{certificateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="businessNo != null">
+        #{businessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null">
+        #{registrationDate,jdbcType=DATE},
+      </if>
+      <if test="ifloanCard != null">
+        #{ifloanCard,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseType != null">
+        #{enterpriseType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualControllerType != null">
+        #{actualControllerType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualController != null">
+        #{actualController,jdbcType=VARCHAR},
+      </if>
+      <if test="companyeName != null">
+        #{companyeName,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialNo != null">
+        #{credentialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNo != null">
+        #{taxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardNo != null">
+        #{loancardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerOrg != null">
+        #{customerOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerDept != null">
+        #{customerDept,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="cteateTime != null">
+        #{cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerPe != null">
+        #{customerPe,jdbcType=VARCHAR},
+      </if>
+      <if test="ifInvest != null">
+        #{ifInvest,jdbcType=VARCHAR},
+      </if>
+      <if test="ifHarmful != null">
+        #{ifHarmful,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCompany != null">
+        #{customerCompany,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.nantian.dao.TCustomerBasicExample" resultType="java.lang.Integer">
+    select count(*) from T_CUSTOMER_BASIC
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update T_CUSTOMER_BASIC
+    <set>
+      <if test="record.customerId != null">
+        CUSTOMER_ID = #{record.customerId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerName != null">
+        CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.certificateFlag != null">
+        CERTIFICATE_FLAG = #{record.certificateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessNo != null">
+        BUSINESS_NO = #{record.businessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.registrationDate != null">
+        REGISTRATION_DATE = #{record.registrationDate,jdbcType=DATE},
+      </if>
+      <if test="record.ifloanCard != null">
+        IFLOAN_CARD = #{record.ifloanCard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enterpriseType != null">
+        ENTERPRISE_TYPE = #{record.enterpriseType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actualControllerType != null">
+        ACTUAL_CONTROLLER_TYPE = #{record.actualControllerType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.actualController != null">
+        ACTUAL_CONTROLLER = #{record.actualController,jdbcType=VARCHAR},
+      </if>
+      <if test="record.companyeName != null">
+        COMPANYE_NAME = #{record.companyeName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.credentialNo != null">
+        CREDENTIAL_NO = #{record.credentialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.taxNo != null">
+        TAX_NO = #{record.taxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.loancardNo != null">
+        LOANCARD_NO = #{record.loancardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerOrg != null">
+        CUSTOMER_ORG = #{record.customerOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerDept != null">
+        CUSTOMER_DEPT = #{record.customerDept,jdbcType=VARCHAR},
+      </if>
+      <if test="record.creater != null">
+        CREATER = #{record.creater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cteateTime != null">
+        CTEATE_TIME = #{record.cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updater != null">
+        UPDATER = #{record.updater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null">
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.customerPe != null">
+        CUSTOMER_PE = #{record.customerPe,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ifInvest != null">
+        IF_INVEST = #{record.ifInvest,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ifHarmful != null">
+        IF_HARMFUL = #{record.ifHarmful,jdbcType=VARCHAR},
+      </if>
+      <if test="record.customerCompany != null">
+        CUSTOMER_COMPANY = #{record.customerCompany,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update T_CUSTOMER_BASIC
+    set CUSTOMER_ID = #{record.customerId,jdbcType=VARCHAR},
+      CUSTOMER_NAME = #{record.customerName,jdbcType=VARCHAR},
+      CERTIFICATE_FLAG = #{record.certificateFlag,jdbcType=VARCHAR},
+      BUSINESS_NO = #{record.businessNo,jdbcType=VARCHAR},
+      REGISTRATION_DATE = #{record.registrationDate,jdbcType=DATE},
+      IFLOAN_CARD = #{record.ifloanCard,jdbcType=VARCHAR},
+      ENTERPRISE_TYPE = #{record.enterpriseType,jdbcType=VARCHAR},
+      ACTUAL_CONTROLLER_TYPE = #{record.actualControllerType,jdbcType=VARCHAR},
+      ACTUAL_CONTROLLER = #{record.actualController,jdbcType=VARCHAR},
+      COMPANYE_NAME = #{record.companyeName,jdbcType=VARCHAR},
+      CREDENTIAL_NO = #{record.credentialNo,jdbcType=VARCHAR},
+      TAX_NO = #{record.taxNo,jdbcType=VARCHAR},
+      LOANCARD_NO = #{record.loancardNo,jdbcType=VARCHAR},
+      CUSTOMER_ORG = #{record.customerOrg,jdbcType=VARCHAR},
+      CUSTOMER_DEPT = #{record.customerDept,jdbcType=VARCHAR},
+      CREATER = #{record.creater,jdbcType=VARCHAR},
+      CTEATE_TIME = #{record.cteateTime,jdbcType=TIMESTAMP},
+      UPDATER = #{record.updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      CUSTOMER_PE = #{record.customerPe,jdbcType=VARCHAR},
+      IF_INVEST = #{record.ifInvest,jdbcType=VARCHAR},
+      IF_HARMFUL = #{record.ifHarmful,jdbcType=VARCHAR},
+      CUSTOMER_COMPANY = #{record.customerCompany,jdbcType=VARCHAR}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nantian.dao.TCustomerBasic">
+    update T_CUSTOMER_BASIC
+    <set>
+      <if test="customerName != null">
+        CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      </if>
+      <if test="certificateFlag != null">
+        CERTIFICATE_FLAG = #{certificateFlag,jdbcType=VARCHAR},
+      </if>
+      <if test="businessNo != null">
+        BUSINESS_NO = #{businessNo,jdbcType=VARCHAR},
+      </if>
+      <if test="registrationDate != null">
+        REGISTRATION_DATE = #{registrationDate,jdbcType=DATE},
+      </if>
+      <if test="ifloanCard != null">
+        IFLOAN_CARD = #{ifloanCard,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseType != null">
+        ENTERPRISE_TYPE = #{enterpriseType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualControllerType != null">
+        ACTUAL_CONTROLLER_TYPE = #{actualControllerType,jdbcType=VARCHAR},
+      </if>
+      <if test="actualController != null">
+        ACTUAL_CONTROLLER = #{actualController,jdbcType=VARCHAR},
+      </if>
+      <if test="companyeName != null">
+        COMPANYE_NAME = #{companyeName,jdbcType=VARCHAR},
+      </if>
+      <if test="credentialNo != null">
+        CREDENTIAL_NO = #{credentialNo,jdbcType=VARCHAR},
+      </if>
+      <if test="taxNo != null">
+        TAX_NO = #{taxNo,jdbcType=VARCHAR},
+      </if>
+      <if test="loancardNo != null">
+        LOANCARD_NO = #{loancardNo,jdbcType=VARCHAR},
+      </if>
+      <if test="customerOrg != null">
+        CUSTOMER_ORG = #{customerOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="customerDept != null">
+        CUSTOMER_DEPT = #{customerDept,jdbcType=VARCHAR},
+      </if>
+      <if test="creater != null">
+        CREATER = #{creater,jdbcType=VARCHAR},
+      </if>
+      <if test="cteateTime != null">
+        CTEATE_TIME = #{cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null">
+        UPDATER = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="customerPe != null">
+        CUSTOMER_PE = #{customerPe,jdbcType=VARCHAR},
+      </if>
+      <if test="ifInvest != null">
+        IF_INVEST = #{ifInvest,jdbcType=VARCHAR},
+      </if>
+      <if test="ifHarmful != null">
+        IF_HARMFUL = #{ifHarmful,jdbcType=VARCHAR},
+      </if>
+      <if test="customerCompany != null">
+        CUSTOMER_COMPANY = #{customerCompany,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nantian.dao.TCustomerBasic">
+    update T_CUSTOMER_BASIC
+    set CUSTOMER_NAME = #{customerName,jdbcType=VARCHAR},
+      CERTIFICATE_FLAG = #{certificateFlag,jdbcType=VARCHAR},
+      BUSINESS_NO = #{businessNo,jdbcType=VARCHAR},
+      REGISTRATION_DATE = #{registrationDate,jdbcType=DATE},
+      IFLOAN_CARD = #{ifloanCard,jdbcType=VARCHAR},
+      ENTERPRISE_TYPE = #{enterpriseType,jdbcType=VARCHAR},
+      ACTUAL_CONTROLLER_TYPE = #{actualControllerType,jdbcType=VARCHAR},
+      ACTUAL_CONTROLLER = #{actualController,jdbcType=VARCHAR},
+      COMPANYE_NAME = #{companyeName,jdbcType=VARCHAR},
+      CREDENTIAL_NO = #{credentialNo,jdbcType=VARCHAR},
+      TAX_NO = #{taxNo,jdbcType=VARCHAR},
+      LOANCARD_NO = #{loancardNo,jdbcType=VARCHAR},
+      CUSTOMER_ORG = #{customerOrg,jdbcType=VARCHAR},
+      CUSTOMER_DEPT = #{customerDept,jdbcType=VARCHAR},
+      CREATER = #{creater,jdbcType=VARCHAR},
+      CTEATE_TIME = #{cteateTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      CUSTOMER_PE = #{customerPe,jdbcType=VARCHAR},
+      IF_INVEST = #{ifInvest,jdbcType=VARCHAR},
+      IF_HARMFUL = #{ifHarmful,jdbcType=VARCHAR},
+      CUSTOMER_COMPANY = #{customerCompany,jdbcType=VARCHAR}
+    where CUSTOMER_ID = #{customerId,jdbcType=VARCHAR}
+  </update>
+  <sql id="OracleDialectPrefix">
+    <if test="limitStart != null">
+      select * from ( select row_.*, rownum rownum_ from ( 
+    </if>
+  </sql>
+  <sql id="OracleDialectSuffix">
+    <if test="limitStart != null">
+      <![CDATA[ ) row_ ) where rownum_ > #{limitStart} and rownum_ <= (#{limitEnd}+#{limitStart}) ]]>
+    </if>
+  </sql>
+</mapper>

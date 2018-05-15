@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!--<properties>
+        <property name="dialect" value="mysql" />
+    </properties>
+    <settings>
+        <setting name="logImpl" value="LOG4J" />
+    </settings>-->
+    <settings>
+        <setting name="jdbcTypeForNull" value="NULL"/>
+        <!-- 打印查询语句 -->
+        <!--<setting name="logImpl" value="STDOUT_LOGGING" />-->
+    </settings>
+    <mappers>
+        <mapper resource="bas/jeda/dao/sqlmap/JedaFieldMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaFunctionMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaItemMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaMenuMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaModuleMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaOrgMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaRoleFunctionMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaRoleMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaRoleMenuMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaRolePermissionMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaRoleUserMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaUserMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaOtherMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaSequencesMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/JedaUserExplandMapper.xml" />
+        <mapper resource="bas/jeda/dao/sqlmap/SLogMapper.xml" />
+  
+    </mappers>
+</configuration>

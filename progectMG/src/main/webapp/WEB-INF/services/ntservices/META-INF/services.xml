@@ -1,0 +1,36 @@
+<serviceGroup>
+    <!--<service name="receiveResultService">-->
+        <!--<description>-->
+            <!--接收财务处理结果的services-->
+        <!--</description>-->
+        <!--<parameter name="ServiceObjectSupplier">-->
+            <!--org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier-->
+        <!--</parameter>-->
+        <!--<parameter name="SpringBeanName">receiveResultService</parameter>-->
+        <!--<operation name="receiveJZResult">-->
+            <!--<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"-->
+                    <!--class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />-->
+        <!--</operation>-->
+
+        <!--<operation name="expendResult">-->
+            <!--<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"-->
+                    <!--class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />-->
+        <!--</operation>-->
+    <!--</service>-->
+    <!--<service name="myService1">-->
+        <!--<description>-->
+            <!--Web Service例子-->
+        <!--</description>-->
+        <!--<parameter name="ServiceClass">-->
+            <!--service.MyService1-->
+        <!--</parameter>-->
+        <!--<messageReceivers>-->
+            <!--<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-out"-->
+                             <!--class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />-->
+            <!--<messageReceiver mep="http://www.w3.org/2004/08/wsdl/in-only"-->
+                             <!--class="org.apache.axis2.rpc.receivers.  -->
+      <!---->
+                                <!--RPCInOnlyMessageReceiver" />-->
+        <!--</messageReceivers>-->
+    <!--</service>-->
+</serviceGroup>

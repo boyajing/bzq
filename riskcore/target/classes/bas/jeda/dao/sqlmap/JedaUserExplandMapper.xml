@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="bas.jeda.dao.JedaUserMapperExpland" >
+  <resultMap id="BaseResultMap" type="bas.jeda.dao.JedaUserExpland" >
+    <id column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="ORG_NAME" property="orgName" jdbcType="VARCHAR" />
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR" />
+  </resultMap>
+  <select id="selectUserByUserId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select us.user_name userName,org.org_name orgName from jeda_user us,Jeda_Org org
+  where us.org_id = org.org_id and us.user_id=#{userid}
+  </select>
+</mapper>

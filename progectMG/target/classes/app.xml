@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+    <context:property-placeholder location="classpath*:db.properties" />
+    <!-- 定义Bean路径 -->
+    <context:component-scan base-package="bas.jeda;com.nantian.service;com.nantian.webservice">
+        <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
+    </context:component-scan>
+    
+    <bean id="configProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath*:common.properties</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PreferencesPlaceholderConfigurer">
+        <property name="properties" ref="configProperties" />
+    </bean>
+    <!--=========================================================================================-->
+
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+        <!--<property name="driverClassName" value="${jdbc.driver}"/>-->
+        <!--<property name="url" value="${jdbc.url}"/>-->
+        <!--<property name="username" value="${jdbc.userName}"/>-->
+        <!--<property name="password" value="${jdbc.password}"/>-->
+    <!--</bean>-->
+
+
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <!-- 基本属性 url、user、password -->
+        <property name="driverClassName" value="${jdbc.driver}"></property>
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.userName}" />
+        <property name="password" value="${jdbc.password}" />
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="2" />
+        <property name="minIdle" value="1" />
+        <property name="maxActive" value="10" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x' FROM DUAL " />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="10" />
+
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="stat" />
+    </bean>
+
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:sqlMapConfig.xml"/>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:com/nantian/dao/*.xml</value>
+                <value>classpath:com/nantian/daoExtend/*.xml</value>
+                <value>classpath:com/nantian/daoExtend/jx/*.xml</value>
+            </list>
+        </property>
+    </bean>
+    <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg index="0" ref="sqlSessionFactory"/>
+    </bean>
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager" proxy-target-class="true"/>
+
+    <bean id="JedaService" class="bas.jeda.core.JedaService">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+
+    <bean id="sLogService" class="bas.jeda.core.SLogService">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+    <bean id="commonService" class="com.nantian.service.sysmgn.CommonService">
+        <property name="sqlSession" ref="sqlSession"/>
+    </bean>
+    <!--         Quartz 调度器           -->
+    <!-- 定义核心调度器
+    ,    需要制定调度的trigger 配置在triggers里面, 注释掉该bean 调度器不执行 -->
+    <!--<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" lazy-init="false">-->
+        <!--<property name="triggers">-->
+            <!--<list>-->
+                <!--<ref bean="alertTrigger"/>-->
+                <!--<ref bean="trigger1"/>-->
+                <!--<ref bean="trigger4"/>-->
+            <!--</list>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <!--<bean id="alertService"  class="com.nantian.service.warningrule.AlertService">-->
+        <!--<property name="sqlSession" ref="sqlSession"/>-->
+    <!--</bean>-->
+    <!--<bean id="autocomplateJob"-->
+          <!--class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--<property name="targetObject" ref="alertService" />-->
+        <!--<property name="targetMethod" value="work" />-->
+        <!--<property name="concurrent" value="false" />-->
+    <!--</bean>-->
+
+    <!--<bean id="alertTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--<property name="jobDetail" ref="autocomplateJob" />-->
+        <!--&lt;!&ndash;每5分钟执行一次&ndash;&gt;-->
+        <!--&lt;!&ndash;<property name="cronExpression" value="0 0/2 * * * ? " />&ndash;&gt;-->
+        <!--&lt;!&ndash;  每天两点执行一次&ndash;&gt;-->
+        <!--<property name="cronExpression" value="0 0 2 1/1 * ? " />-->
+
+        <!--&lt;!&ndash;<property name="cronExpression" value="0 15 22 * * ?" />&ndash;&gt;-->
+        <!--&lt;!&ndash; <property name="cronExpression">-->
+             <!--<value>10,15,20,25,30,35,40,45,50,55 * * * * ?</value>-->
+         <!--</property>&ndash;&gt;-->
+    <!--</bean>-->
+    <!--↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓计息跑批↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓-->
+    <!--按月计息-->
+    <!--<bean id="iqs" class="com.nantian.service.interestAccrual.InterestQuartzServiceByMonthService">-->
+        <!--<property name="sqlSession" ref="sqlSession"/>-->
+    <!--</bean>-->
+    <!--按季度计息-->
+    <!--<bean id="iqqs" class="com.nantian.service.interestAccrual.InterestQuartzByQuarterService">-->
+        <!--<property name="sqlSession" ref="sqlSession"/>-->
+    <!--</bean>-->
+    <!--<bean id="autoJob"-->
+          <!--class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--&lt;!&ndash; 注入任务类 &ndash;&gt;-->
+        <!--<property name="targetObject" ref="iqs"/>-->
+        <!--&lt;!&ndash; 任务方法  按月计息&ndash;&gt;-->
+        <!--<property name="targetMethod" value="quartInterestByMonth"/>-->
+        <!--<property name="concurrent" value="false"/>-->
+    <!--</bean>-->
+    <!--创建触发器-->
+    <!--<bean id="trigger1" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--&lt;!&ndash; 依赖cron表达式  每月最后一天10点触发  0 0 22 L * ? * &ndash;&gt;-->
+        <!--<property name="cronExpression" value="0 0 22 L * ? *"/>-->
+        <!--&lt;!&ndash; 注入任务详情 &ndash;&gt;-->
+        <!--<property name="jobDetail" ref="autoJob"/>-->
+    <!--</bean>-->
+    <!--<bean id="autoJob1"-->
+          <!--class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--&lt;!&ndash; 注入任务类 &ndash;&gt;-->
+        <!--<property name="targetObject" ref="iqqs"/>-->
+        <!--&lt;!&ndash; 任务方法  按季度计息&ndash;&gt;-->
+        <!--<property name="targetMethod" value="quartInterestByQuarter"/>-->
+        <!--<property name="concurrent" value="false"/>-->
+    <!--</bean>-->
+    <!--创建触发器-->
+    <!--<bean id="trigger4" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--&lt;!&ndash; 按季计息：3-21,6-21,9-21,12-21的1点计息  0 0 0 21 3,6,9,12 ? *&ndash;&gt;-->
+        <!--<property name="cronExpression" value="0 0 1 21 3,6,9,12 ? *"/>-->
+        <!--&lt;!&ndash; 注入任务详情 &ndash;&gt;-->
+        <!--<property name="jobDetail" ref="autoJob1"/>-->
+    <!--</bean>-->
+    <!--↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑计息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑-->
+    <task:annotation-driven executor="annotationExecutor" />
+    <!-- 支持 @Async 注解 异步调用 -->
+    <task:executor id="annotationExecutor" pool-size="10"/>
+</beans>
+

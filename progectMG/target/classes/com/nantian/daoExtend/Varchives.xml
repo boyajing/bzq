@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nantian.daoExtend.VarchivesMapper">
+  <resultMap id="BaseResultMap" type="com.nantian.daoExtend.Varchives">
+    <result column="cid" jdbcType="VARCHAR" property="cid" />
+    <result column="cname" jdbcType="DECIMAL" property="cname" />
+      <result column="khlx" jdbcType="VARCHAR" property="khlx" />
+    <result column="khlb" jdbcType="VARCHAR" property="khlb" />
+  </resultMap>
+  <!--查询立项客户信息-->
+  <sql id="selectClause" >
+	 select tp.customer_id cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tp.customer_id is not null) THEN '客户' ELSE
+''END) AS khlb from t_project tp,t_customer_basic tcb where tp.customer_id=tcb.customer_id and tp.project_code=#{projectcode}
+union
+ select tmi.mortgage_owner cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tmi.mortgage_owner is not null) THEN '抵押人' ELSE
+''END) AS khlb from t_project tp,t_mortgage_information tmi,t_customer_basic tcb where tp.project_code=tmi.project_code
+and tmi.mortgage_owner=tcb.customer_id and tp.project_code=#{projectcode}
+union
+select tci.customer_code cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tci.customer_code is not null) THEN '交易对手' ELSE
+''END) AS khlb from t_project tp,t_counterparty_info tci ,t_customer_basic tcb where tp.project_code=tci.project_code
+and tci.customer_code=tcb.customer_id and tp.project_code=#{projectcode}
+union
+select tgi.customer_code cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tgi.customer_code is not null) THEN '保证人' ELSE
+''END) AS khlb from t_project tp,t_guarantor_info tgi ,t_customer_basic tcb
+where tp.project_code=tgi.project_code and tgi.customer_code=tcb.customer_id and tp.project_code=#{projectcode}
+union
+select tpi.pledge_owner cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE
+WHEN (tpi.pledge_owner is not null) THEN '质押人' ELSE ''END) AS khlb from t_project tp,t_pledge_info tpi ,t_customer_basic tcb
+where tp.project_code=tpi.project_code and tpi.pledge_owner=tcb.customer_id and tp.project_code=#{projectcode}
+union
+select tgi.regroup_debtor cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tgi.regroup_debtor is not null) THEN '重组后债务人'
+ELSE ''END) AS khlb from t_project tp,t_regroup_info tgi ,t_customer_basic tcb
+where tp.project_code=tgi.project_code and tgi.regroup_debtor=tcb.customer_id and tp.project_code=#{projectcode}
+union
+select tgi.common_debtor cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (tgi.common_debtor is not null) THEN '共同债务人' ELSE ''END) AS khlb
+from t_project tp,t_regroup_info tgi ,t_customer_basic tcb
+where tp.project_code=tgi.project_code and tgi.common_debtor=tcb.customer_id and tp.project_code=#{projectcode}
+ </sql>
+  <select id="selectCount" parameterType="map" resultType="java.lang.Integer" >
+    select count(*) from (<include refid="selectClause" />)
+  </select>
+  <select id="selectlxkh" resultMap="BaseResultMap" parameterType="map" >
+    <include refid="OracleDialectPrefix"></include>
+    <include refid="selectClause"></include>
+    <include refid="OracleDialectSuffix"></include>
+  </select>
+
+    <!--查询方案客户信息-->
+    <sql id="selectfaxx" >
+      select scps.customer_id cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scps.customer_id is not null) THEN '客户' ELSE
+''END) AS khlb from sc_project_scheme scps,t_customer_basic tcb where scps.customer_id=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+ select scmi.mortgage_owner cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scmi.mortgage_owner is not null) THEN '抵押人' ELSE
+''END) AS khlb from sc_project_scheme scps,sc_mortgage_information2 scmi,t_customer_basic tcb where scps.scheme_id=scmi.scheme_id
+and scmi.mortgage_owner=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+select scci.customer_code cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scci.customer_code is not null) THEN '交易对手' ELSE
+''END) AS khlb from sc_project_scheme scps,sc_counterparty_info2 scci ,t_customer_basic tcb where scps.scheme_id=scci.scheme_id
+and scci.customer_code=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+select scgi.customer_code cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scgi.customer_code is not null) THEN '保证人' ELSE
+''END) AS khlb from sc_project_scheme scps,sc_guarantor_info2 scgi ,t_customer_basic tcb
+where scps.scheme_id=scgi.scheme_id and scgi.customer_code=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+select scpi.pledge_owner cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE
+WHEN (scpi.pledge_owner is not null) THEN '质押人' ELSE ''END) AS khlb from sc_project_scheme scps,sc_pledge_info2 scpi ,t_customer_basic tcb
+where scps.scheme_id=scpi.scheme_id and scpi.pledge_owner=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+select scri.regroup_debtor cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scri.regroup_debtor is not null) THEN '重组后债务人'
+ELSE ''END) AS khlb from sc_project_scheme scps,sc_regroup_info2 scri ,t_customer_basic tcb
+where scps.scheme_id=scri.scheme_id and scri.regroup_debtor=tcb.customer_id and scps.scheme_id=#{schemeId}
+union
+select scri.common_debtor cid,tcb.customer_name cname,tcb.actual_controller_type khlx,(CASE WHEN (scri.common_debtor is not null) THEN '共同债务人' ELSE ''END) AS khlb
+from sc_project_scheme scps,sc_regroup_info2 scri ,t_customer_basic tcb
+where scps.scheme_id=scri.scheme_id and scri.common_debtor=tcb.customer_id and scps.scheme_id=#{schemeId}
+    </sql>
+    <select id="selectFaCount" parameterType="map" resultType="java.lang.Integer" >
+        select count(*) from (<include refid="selectfaxx" />)
+    </select>
+    <select id="selectfakh" resultMap="BaseResultMap" parameterType="map" >
+        <include refid="OracleDialectPrefix"></include>
+        <include refid="selectfaxx"></include>
+        <include refid="OracleDialectSuffix"></include>
+    </select>
+
+  <sql id="OracleDialectPrefix" >
+    <if test="limitStart != null" >
+      select * from ( select row_.*, rownum rownum_ from (
+    </if>
+  </sql>
+  <sql id="OracleDialectSuffix" >
+    <if test="limitStart != null" >
+      <![CDATA[ ) row_ ) where rownum_ > #{limitStart} and rownum_ <= (#{limitEnd}+#{limitStart}) ]]>
+    </if>
+  </sql>
+</mapper>

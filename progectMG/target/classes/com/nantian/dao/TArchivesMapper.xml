@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.nantian.dao.TArchivesMapper" >
+  <resultMap id="BaseResultMap" type="com.nantian.dao.TArchives" >
+    <id column="ID" property="id" jdbcType="VARCHAR" />
+    <result column="BUSINESS_TYPE" property="businessType" jdbcType="VARCHAR" />
+    <result column="PROJECT_CODE" property="projectCode" jdbcType="VARCHAR" />
+    <result column="CHILD_TYPE" property="childType" jdbcType="VARCHAR" />
+    <result column="BUSINESS_ID" property="businessId" jdbcType="VARCHAR" />
+    <result column="FILE_NUMBER" property="fileNumber" jdbcType="VARCHAR" />
+    <result column="FILE_NAME" property="fileName" jdbcType="VARCHAR" />
+    <result column="FILE_TYPE" property="fileType" jdbcType="VARCHAR" />
+    <result column="FILE_PATH" property="filePath" jdbcType="VARCHAR" />
+    <result column="FILE_CREATER" property="fileCreater" jdbcType="VARCHAR" />
+    <result column="CREATER_ORG" property="createrOrg" jdbcType="VARCHAR" />
+    <result column="CREATE_DEP" property="createDep" jdbcType="VARCHAR" />
+    <result column="CREATER_ID" property="createrId" jdbcType="VARCHAR" />
+    <result column="CTEATE_TIME" property="cteateTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATER" property="updater" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    ID, BUSINESS_TYPE, PROJECT_CODE, CHILD_TYPE, BUSINESS_ID, FILE_NUMBER, FILE_NAME, FILE_TYPE, 
+    FILE_PATH, FILE_CREATER, CREATER_ORG, CREATE_DEP, CREATER_ID, CTEATE_TIME, UPDATER, 
+    UPDATE_TIME
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.nantian.dao.TArchivesExample" >
+    <include refid="OracleDialectPrefix" />
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from T_ARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <include refid="OracleDialectSuffix" />
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from T_ARCHIVES
+    where ID = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from T_ARCHIVES
+    where ID = #{id,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.nantian.dao.TArchivesExample" >
+    delete from T_ARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.nantian.dao.TArchives" >
+    insert into T_ARCHIVES (ID, BUSINESS_TYPE, PROJECT_CODE, 
+      CHILD_TYPE, BUSINESS_ID, FILE_NUMBER, 
+      FILE_NAME, FILE_TYPE, FILE_PATH, 
+      FILE_CREATER, CREATER_ORG, CREATE_DEP, 
+      CREATER_ID, CTEATE_TIME, UPDATER, 
+      UPDATE_TIME)
+    values (#{id,jdbcType=VARCHAR}, #{businessType,jdbcType=VARCHAR}, #{projectCode,jdbcType=VARCHAR}, 
+      #{childType,jdbcType=VARCHAR}, #{businessId,jdbcType=VARCHAR}, #{fileNumber,jdbcType=VARCHAR}, 
+      #{fileName,jdbcType=VARCHAR}, #{fileType,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
+      #{fileCreater,jdbcType=VARCHAR}, #{createrOrg,jdbcType=VARCHAR}, #{createDep,jdbcType=VARCHAR}, 
+      #{createrId,jdbcType=VARCHAR}, #{cteateTime,jdbcType=TIMESTAMP}, #{updater,jdbcType=VARCHAR}, 
+      #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.nantian.dao.TArchives" >
+    insert into T_ARCHIVES
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        ID,
+      </if>
+      <if test="businessType != null" >
+        BUSINESS_TYPE,
+      </if>
+      <if test="projectCode != null" >
+        PROJECT_CODE,
+      </if>
+      <if test="childType != null" >
+        CHILD_TYPE,
+      </if>
+      <if test="businessId != null" >
+        BUSINESS_ID,
+      </if>
+      <if test="fileNumber != null" >
+        FILE_NUMBER,
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME,
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE,
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH,
+      </if>
+      <if test="fileCreater != null" >
+        FILE_CREATER,
+      </if>
+      <if test="createrOrg != null" >
+        CREATER_ORG,
+      </if>
+      <if test="createDep != null" >
+        CREATE_DEP,
+      </if>
+      <if test="createrId != null" >
+        CREATER_ID,
+      </if>
+      <if test="cteateTime != null" >
+        CTEATE_TIME,
+      </if>
+      <if test="updater != null" >
+        UPDATER,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="businessType != null" >
+        #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null" >
+        #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="childType != null" >
+        #{childType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null" >
+        #{businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNumber != null" >
+        #{fileNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreater != null" >
+        #{fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="createrOrg != null" >
+        #{createrOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDep != null" >
+        #{createDep,jdbcType=VARCHAR},
+      </if>
+      <if test="createrId != null" >
+        #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="cteateTime != null" >
+        #{cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.nantian.dao.TArchivesExample" resultType="java.lang.Integer" >
+    select count(*) from T_ARCHIVES
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update T_ARCHIVES
+    <set >
+      <if test="record.id != null" >
+        ID = #{record.id,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessType != null" >
+        BUSINESS_TYPE = #{record.businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.projectCode != null" >
+        PROJECT_CODE = #{record.projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.childType != null" >
+        CHILD_TYPE = #{record.childType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.businessId != null" >
+        BUSINESS_ID = #{record.businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileNumber != null" >
+        FILE_NUMBER = #{record.fileNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileName != null" >
+        FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileType != null" >
+        FILE_TYPE = #{record.fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="record.filePath != null" >
+        FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="record.fileCreater != null" >
+        FILE_CREATER = #{record.fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createrOrg != null" >
+        CREATER_ORG = #{record.createrOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createDep != null" >
+        CREATE_DEP = #{record.createDep,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createrId != null" >
+        CREATER_ID = #{record.createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.cteateTime != null" >
+        CTEATE_TIME = #{record.cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updater != null" >
+        UPDATER = #{record.updater,jdbcType=VARCHAR},
+      </if>
+      <if test="record.updateTime != null" >
+        UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update T_ARCHIVES
+    set ID = #{record.id,jdbcType=VARCHAR},
+      BUSINESS_TYPE = #{record.businessType,jdbcType=VARCHAR},
+      PROJECT_CODE = #{record.projectCode,jdbcType=VARCHAR},
+      CHILD_TYPE = #{record.childType,jdbcType=VARCHAR},
+      BUSINESS_ID = #{record.businessId,jdbcType=VARCHAR},
+      FILE_NUMBER = #{record.fileNumber,jdbcType=VARCHAR},
+      FILE_NAME = #{record.fileName,jdbcType=VARCHAR},
+      FILE_TYPE = #{record.fileType,jdbcType=VARCHAR},
+      FILE_PATH = #{record.filePath,jdbcType=VARCHAR},
+      FILE_CREATER = #{record.fileCreater,jdbcType=VARCHAR},
+      CREATER_ORG = #{record.createrOrg,jdbcType=VARCHAR},
+      CREATE_DEP = #{record.createDep,jdbcType=VARCHAR},
+      CREATER_ID = #{record.createrId,jdbcType=VARCHAR},
+      CTEATE_TIME = #{record.cteateTime,jdbcType=TIMESTAMP},
+      UPDATER = #{record.updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.nantian.dao.TArchives" >
+    update T_ARCHIVES
+    <set >
+      <if test="businessType != null" >
+        BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+      </if>
+      <if test="projectCode != null" >
+        PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+      </if>
+      <if test="childType != null" >
+        CHILD_TYPE = #{childType,jdbcType=VARCHAR},
+      </if>
+      <if test="businessId != null" >
+        BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+      </if>
+      <if test="fileNumber != null" >
+        FILE_NUMBER = #{fileNumber,jdbcType=VARCHAR},
+      </if>
+      <if test="fileName != null" >
+        FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="fileType != null" >
+        FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      </if>
+      <if test="filePath != null" >
+        FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      </if>
+      <if test="fileCreater != null" >
+        FILE_CREATER = #{fileCreater,jdbcType=VARCHAR},
+      </if>
+      <if test="createrOrg != null" >
+        CREATER_ORG = #{createrOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="createDep != null" >
+        CREATE_DEP = #{createDep,jdbcType=VARCHAR},
+      </if>
+      <if test="createrId != null" >
+        CREATER_ID = #{createrId,jdbcType=VARCHAR},
+      </if>
+      <if test="cteateTime != null" >
+        CTEATE_TIME = #{cteateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updater != null" >
+        UPDATER = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.nantian.dao.TArchives" >
+    update T_ARCHIVES
+    set BUSINESS_TYPE = #{businessType,jdbcType=VARCHAR},
+      PROJECT_CODE = #{projectCode,jdbcType=VARCHAR},
+      CHILD_TYPE = #{childType,jdbcType=VARCHAR},
+      BUSINESS_ID = #{businessId,jdbcType=VARCHAR},
+      FILE_NUMBER = #{fileNumber,jdbcType=VARCHAR},
+      FILE_NAME = #{fileName,jdbcType=VARCHAR},
+      FILE_TYPE = #{fileType,jdbcType=VARCHAR},
+      FILE_PATH = #{filePath,jdbcType=VARCHAR},
+      FILE_CREATER = #{fileCreater,jdbcType=VARCHAR},
+      CREATER_ORG = #{createrOrg,jdbcType=VARCHAR},
+      CREATE_DEP = #{createDep,jdbcType=VARCHAR},
+      CREATER_ID = #{createrId,jdbcType=VARCHAR},
+      CTEATE_TIME = #{cteateTime,jdbcType=TIMESTAMP},
+      UPDATER = #{updater,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP}
+    where ID = #{id,jdbcType=VARCHAR}
+  </update>
+  <sql id="OracleDialectPrefix" >
+    <if test="limitStart != null" >
+      select * from ( select row_.*, rownum rownum_ from ( 
+    </if>
+  </sql>
+  <sql id="OracleDialectSuffix" >
+    <if test="limitStart != null" >
+      <![CDATA[ ) row_ ) where rownum_ > #{limitStart} and rownum_ <= (#{limitEnd}+#{limitStart}) ]]>
+    </if>
+  </sql>
+</mapper>

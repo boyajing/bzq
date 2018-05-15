@@ -1,0 +1,16 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package bas.jeda.exception;
+
+/**
+ *
+ * @author menghui
+ */
+public class ExcelViewColumnIsNULLException   extends JEDAException{
+    public ExcelViewColumnIsNULLException() {
+	super("####UMap Nantian#003#### ExcelView columns is null");
+    }
+}

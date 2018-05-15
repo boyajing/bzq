@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans   http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:property-placeholder location="classpath*:db.properties" />
+    <!--<bean id="dataSource_act" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+        <!--<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />-->
+        <!--&lt;!&ndash;<property name="url" value="jdbc:oracle:thin:@localhost:1521:orcl"/>&ndash;&gt;-->
+        <!--<property name="url" value="jdbc:oracle:thin:@139.0.0.1:1521:hbzc"/>-->
+        <!--<property name="username" value="hbzc1"/>-->
+        <!--<property name="password" value="hbzc1"/>-->
+        <!--<property name="initialSize" value="2" />-->
+        <!--<property name="maxActive" value="5"/>-->
+        <!--<property name="maxIdle" value="2"/>-->
+        <!--<property name="minIdle" value="1"/>-->
+    <!--</bean>-->
+
+    <bean id="dataSource_act" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+
+        <!-- 基本属性 url、user、password -->
+        <property name="driverClassName" value="${act.jdbc.driver}"></property>
+        <property name="url" value="${act.jdbc.url}" />
+        <property name="username" value="${act.jdbc.userName}" />
+        <property name="password" value="${act.jdbc.password}" />
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="5" />
+        <property name="minIdle" value="3" />
+        <property name="maxActive" value="10" />
+
+        <!-- 配置获取连接等待超时的时间 -->
+        <property name="maxWait" value="60000" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+
+        <property name="validationQuery" value="SELECT 'x' FROM DUAL" />
+        <property name="testWhileIdle" value="true" />
+        <property name="testOnBorrow" value="false" />
+        <property name="testOnReturn" value="false" />
+
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+        <property name="poolPreparedStatements" value="true" />
+        <property name="maxPoolPreparedStatementPerConnectionSize" value="10" />
+
+        <!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+        <property name="filters" value="stat" />
+    </bean>
+    <bean id="transactionManager_act"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource_act"></property>
+    </bean>
+
+    <bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
+        <property name="dataSource" ref="dataSource_act" />
+        <property name="transactionManager" ref="transactionManager_act" />
+        <property name="databaseSchemaUpdate" value="true" />
+        <property name="jobExecutorActivate" value="false" />
+        <property name="history" value="full"/>
+        <property name="labelFontName" value="宋体"></property>
+        <property name="activityFontName" value="宋体"></property>
+    </bean>
+    <bean id="processEngine" class="org.activiti.spring.ProcessEngineFactoryBean">
+        <property name="processEngineConfiguration" ref="processEngineConfiguration" />
+    </bean>
+    <!--部署流程时需注掉，否则提示bean注入有问题-->
+    <bean id="flowAnchor" class="bas.jeda.workflow.FlowAnchor"></bean>
+    <bean id="flowHandler" class="bas.jeda.workflow.FlowHandler"></bean>
+    <bean id="processTurnCore" class="bas.jeda.workflow.ProcessTurnCore"></bean>
+    <bean id="opinionHandler" class="bas.jeda.workflow.OpinionHandler"></bean>
+    <bean id="approveController" class="bas.jeda.workflow.controller.ApproveController"></bean>
+    <bean id="approveMeetingController" class="bas.jeda.workflow.controller.ApproveMeetingController"></bean>
+    <bean id="flowMGController" class="bas.jeda.workflow.controller.FlowMGController"></bean>
+
+    <!--调用第三方接口 给云之家发送消息的监听，每个流程都需要配置-->
+    <!--<bean id="sendOAMsgTaskListener" class="bas.jeda.workflow.listener.SendOAMsgTaskListener"></bean>-->
+
+    <!--&lt;!&ndash;补充流程监听&ndash;&gt;-->
+    <!--<bean id="supplementExcutionListener" class="bas.jeda.workflow.listener.SupplementExcutionListener"></bean>-->
+
+    <!--&lt;!&ndash;立项流程监听&ndash;&gt;-->
+    <!--<bean id="projectExcutionListener" class="bas.jeda.workflow.listener.ProjectExcutionListener"></bean>-->
+    <!--<bean id="projectTaskListener" class="bas.jeda.workflow.listener.ProjectTaskListener"></bean>-->
+    <!--&lt;!&ndash;评估流程监听&ndash;&gt;-->
+    <!--<bean id="assessExcutionListener" class="bas.jeda.workflow.listener.AssessExcutionListener"></bean>-->
+    <!--<bean id="assessTaskListener" class="bas.jeda.workflow.listener.AssessTaskListener"></bean>-->
+    <!--&lt;!&ndash;方案流程监听&ndash;&gt;-->
+    <!--<bean id="planExcutionListener" class="bas.jeda.workflow.listener.PlanExcutionListener"></bean>-->
+    <!--<bean id="planTaskListener" class="bas.jeda.workflow.listener.PlanTaskListener"></bean>-->
+    <!--&lt;!&ndash;方案上会流程监听&ndash;&gt;-->
+    <!--<bean id="planmeetingExcutionListener" class="bas.jeda.workflow.listener.PlanmeetingExcutionListener"></bean>-->
+    <!--<bean id="planmeetingTaskListener" class="bas.jeda.workflow.listener.PlanmeetingTaskListener"></bean>-->
+    <!--&lt;!&ndash;核保流程监听&ndash;&gt;-->
+    <!--<bean id="underwritingExcutionListener" class="bas.jeda.workflow.listener.UnderwritingExcutionListener"></bean>-->
+    <!--<bean id="underwritingTaskListener" class="bas.jeda.workflow.listener.UnderwritingTaskListener"></bean>-->
+    <!--&lt;!&ndash;公共审查意见监听&ndash;&gt;-->
+    <!--<bean id="feedBackListener" class="bas.jeda.workflow.listener.FeedBackListener"></bean>-->
+    <!--<bean id="planFeedBackListener" class="bas.jeda.workflow.listener.PlanFeedBackListener"></bean>-->
+    <!--&lt;!&ndash;公共并行节点监听&ndash;&gt;-->
+    <!--<bean id="parallelTaskListener" class="bas.jeda.workflow.listener.ParallelTaskListener"></bean>-->
+    <!--&lt;!&ndash;方案上会流程监听&ndash;&gt;-->
+    <!--<bean id="meetingExcutionListener" class="bas.jeda.workflow.listener.MeetingExcutionListener"></bean>-->
+    <!--<bean id="meetingTaskListener" class="bas.jeda.workflow.listener.MeetingTaskListener"></bean>-->
+    <!--&lt;!&ndash;出账流程监听&ndash;&gt;-->
+    <!--<bean id="expendExcutionListener" class="bas.jeda.workflow.listener.ExpendExcutionListener"></bean>-->
+    <!--<bean id="expendTaskListener" class="bas.jeda.workflow.listener.ExpendTaskListener"></bean>-->
+    <!--&lt;!&ndash;合同流程监听&ndash;&gt;-->
+    <!--<bean id="contractExcutionListener" class="bas.jeda.workflow.listener.ContractExcutionListener"></bean>-->
+    <!--<bean id="contractTaskListener" class="bas.jeda.workflow.listener.ContractTaskListener"></bean>-->
+    <!--&lt;!&ndash;不良资产包导入流程监听&ndash;&gt;-->
+    <!--<bean id="badassetsExcutionListener" class="bas.jeda.workflow.listener.BadassetsExcutionListener"></bean>-->
+    <!--<bean id="badassetsTaskListener" class="bas.jeda.workflow.listener.BadassetsTaskListener"></bean>-->
+    <!--&lt;!&ndash;处置回收流程监听&ndash;&gt;-->
+    <!--<bean id="chuzhiExcutionListener" class="bas.jeda.workflow.listener.ChuZhiExcutionListener"></bean>-->
+    <!--<bean id="chuzhiTaskListener" class="bas.jeda.workflow.listener.ChuZhiTaskListener"></bean>-->
+    <!--&lt;!&ndash;投后管理流程监听&ndash;&gt;-->
+    <!--<bean id="inspectionExcutionListener" class="bas.jeda.workflow.listener.InspectionExcutionListener"></bean>-->
+    <!--<bean id="inspectionTaskListener" class="bas.jeda.workflow.listener.InspectionTaskListener"></bean>-->
+
+    <!--&lt;!&ndash;审计流程监听&ndash;&gt;-->
+    <!--<bean id="auditExcutionListener" class="bas.jeda.workflow.listener.AuditExcutionListener"></bean>-->
+    <!--<bean id="auditTaskListener" class="bas.jeda.workflow.listener.AuditTaskListener"></bean>-->
+    <!--&lt;!&ndash;投后评价流程监听&ndash;&gt;-->
+    <!--<bean id="evaluateExcutionListener" class="bas.jeda.workflow.listener.EvaluateExcutionListener"></bean>-->
+    <!--<bean id="evaluateTaskListener" class="bas.jeda.workflow.listener.EvaluateTaskListener"></bean>-->
+    <!--&lt;!&ndash;投资合同出账审批流程监听&ndash;&gt;-->
+    <!--<bean id="investPutExcutionListener" class="bas.jeda.workflow.listener.InvestPutExcutionListener"></bean>-->
+    <!--<bean id="investPutTaskListener" class="bas.jeda.workflow.listener.InvestPutTaskListener"></bean>-->
+    <!--&lt;!&ndash;投资合同现金回收流程监听&ndash;&gt;-->
+    <!--<bean id="investRecExcutionListener" class="bas.jeda.workflow.listener.InvestRecExcutionListener"></bean>-->
+    <!--<bean id="investRecTaskListener" class="bas.jeda.workflow.listener.InvestRecTaskListener"></bean>-->
+    <!--&lt;!&ndash;会议申请流程监听&ndash;&gt;-->
+    <!--<bean id="confapplicationExcutionListener" class="bas.jeda.workflow.listener.ConfapplicationExcutionListener"></bean>-->
+    <!--<bean id="confapplicationTaskListener" class="bas.jeda.workflow.listener.ConfapplicationTaskListener"></bean>-->
+    <!--&lt;!&ndash;投资合同计划变更流程监听&ndash;&gt;-->
+    <!--<bean id="investPlanExcutionListener" class="bas.jeda.workflow.listener.InvestPlanExcutionListener"></bean>-->
+    <!--<bean id="investPlanTaskListener" class="bas.jeda.workflow.listener.InvestPlanTaskListener"></bean>-->
+    <!--&lt;!&ndash;融资合同计划变更流程监听&ndash;&gt;-->
+    <!--<bean id="financePlanExcutionListener" class="bas.jeda.workflow.listener.FinancePlanExcutionListener"></bean>-->
+    <!--<bean id="financePlanTaskListener" class="bas.jeda.workflow.listener.FinancePlanTaskListener"></bean>-->
+    <!--&lt;!&ndash;资产交接流程监听&ndash;&gt;-->
+    <!--<bean id="assetconnectExcutionListener" class="bas.jeda.workflow.listener.AssetConnectExcutionListener"></bean>-->
+    <!--<bean id="assetconnectTaskListener" class="bas.jeda.workflow.listener.AssetConnectTaskListener"></bean>-->
+    <!--&lt;!&ndash;除法律部单独合同流程&ndash;&gt;-->
+    <!--<bean id="simpleContractExcutionListener" class="bas.jeda.workflow.listener.SimpleContractExcutionListener"></bean>-->
+    <!--<bean id="simpleContractTaskListener" class="bas.jeda.workflow.listener.SimpleContractTaskListener"></bean>-->
+    <!--&lt;!&ndash;法律部单独合同流程&ndash;&gt;-->
+    <!--<bean id="falvsimpleContractExcutionListener" class="bas.jeda.workflow.listener.FalvsimpleContractExcutionListener"></bean>-->
+    <!--<bean id="falvsimpleContractTaskListener" class="bas.jeda.workflow.listener.FalvsimpleContractTaskListener"></bean>-->
+    <!--&lt;!&ndash;重大风险预警信号流程&ndash;&gt;-->
+    <!--<bean id="improtantExcutionListener" class="bas.jeda.workflow.listener.ImprotantExcutionListener"></bean>-->
+    <!--<bean id="importantTaskListener" class="bas.jeda.workflow.listener.ImportantTaskListener"></bean>-->
+</beans>
