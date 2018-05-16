@@ -52,9 +52,9 @@
                 };
                 $("#save").click(function () {
                     //校验必输项
-                  if(!beforeSubmit()){
-                        return false;
-                    }
+//                  if(!beforeSubmit()){
+//                        return false;
+//                    }
                     var userform = $("#tab");
                     //将form数据组装成json对象的juery扩展  
                     var user = userform.serializeObject();

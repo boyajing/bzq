@@ -9,7 +9,7 @@
 
     <context:property-placeholder location="classpath*:db.properties" />
     <!-- 定义Bean路径 -->
-    <context:component-scan base-package="bas.jeda;com.nantian.service;com.nantian.webservice">
+    <context:component-scan base-package="bas.jeda;com.nantian.service;com.byj.service">
         <context:exclude-filter expression="org.springframework.stereotype.Controller" type="annotation"/>
     </context:component-scan>
     
@@ -77,6 +77,8 @@
                 <value>classpath:com/nantian/dao/*.xml</value>
                 <value>classpath:com/nantian/daoExtend/*.xml</value>
                 <value>classpath:com/nantian/daoExtend/jx/*.xml</value>
+                <value>classpath:com/byj/dao/*.xml</value>
+                <!--<value>classpath:com/byj/daoExtend/*.xml</value>-->
             </list>
         </property>
     </bean>
