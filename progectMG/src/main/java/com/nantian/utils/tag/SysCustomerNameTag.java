@@ -1,7 +1,7 @@
 package com.nantian.utils.tag;
 
-import com.nantian.dao.TCustomerBasic;
-import com.nantian.dao.TCustomerBasicMapper;
+import com.byj.dao.TCustomer;
+import com.byj.dao.TCustomerMapper;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -46,16 +46,16 @@ public class SysCustomerNameTag extends BodyTagSupport {
                 ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(pageContext.getServletContext());
             SqlSessionTemplate sqlSession = (SqlSessionTemplate) ctx.getBean("sqlSession");
 
-            TCustomerBasicMapper tCustomerBasicMapper = sqlSession.getMapper(TCustomerBasicMapper.class);
+            TCustomerMapper tCustomerMapper = sqlSession.getMapper(TCustomerMapper.class);
             String[] split = this.cuscomerid.split(",");
             sb = new StringBuffer();
             for(int i = 0 ;i< split.length ;i++){
-                TCustomerBasic tCustomerBasic = tCustomerBasicMapper.selectByPrimaryKey(split[i]);
-                if(tCustomerBasic != null){
+                TCustomer tCustomer = tCustomerMapper.selectByPrimaryKey(split[i]);
+                if(tCustomer != null){
                     if(i < split.length-1){
-                        sb.append(tCustomerBasic.getCustomerName() +",");
+                        sb.append(tCustomer.getCustomerName() +",");
                     }else{
-                        sb.append(tCustomerBasic.getCustomerName());
+                        sb.append(tCustomer.getCustomerName());
                     }
                 }
 

@@ -35,7 +35,7 @@
         SELECT SEQ_TRANSACTION.NEXTVAL FROM DUAL
     </select>
     <select id="querySEQRECEIPTS" resultType="int" useCache="false" flushCache="true" >
-        SELECT SEQ_RECEIPTS.NEXTVAL FROM DUAL
+        SELECT SEQ_TOOL.NEXTVAL FROM DUAL
     </select>
     <select id="querySEQCOLLATERAL" resultType="int" useCache="false" flushCache="true" >
         SELECT SEQ_COLLATERAL.NEXTVAL FROM DUAL
@@ -57,5 +57,8 @@
     </select>
     <select id="querySEQCLASSIFICATION" resultType="int" useCache="false" flushCache="true" >
         SELECT SEQ_CLASSIFICATION.NEXTVAL FROM DUAL
+    </select>
+    <select id="querySEQWORKPIECE" resultType="int" useCache="false" flushCache="true" >
+        SELECT SEQ_WORKPIECE.NEXTVAL FROM DUAL
     </select>
 </mapper>

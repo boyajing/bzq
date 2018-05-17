@@ -61,4 +61,10 @@ public interface IDSequenceMapper {
 
     //资产分类
     int querySEQCLASSIFICATION();
+
+    /**
+     * 工件编号
+     * @return
+     */
+    int querySEQWORKPIECE();
 }

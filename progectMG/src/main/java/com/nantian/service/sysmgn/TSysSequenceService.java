@@ -42,6 +42,11 @@ public class TSysSequenceService extends AbstrctDBInf {
      */
     public static final String WYID = "WYID";
 
+    /**
+     * 工件
+     */
+    public static final String WORKPIECE = "PD";
+
 
     //@Transactional(readOnly = true)
     public  String  getPrimaryKey(String type,String orgId){
@@ -64,11 +69,14 @@ public class TSysSequenceService extends AbstrctDBInf {
         }else if(WYID.equals(type)){//递增主键
             i = mapper.querySEQWYID();
             return  getKey(i + "" ,10);
+        }else if(WORKPIECE.equals(type)){//递增主键
+            i = mapper.querySEQWORKPIECE();
+            return  type + orgId +getKey(i + "" ,10);
         }
         if(i == 0){
             return null;
         }
-        return  type + orgId+getKey(i + "" ,10);
+        return  type + orgId+getKey(i + "" ,9);
     }
 
     /**
