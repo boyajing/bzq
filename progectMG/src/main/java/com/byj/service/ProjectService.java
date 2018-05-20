@@ -6,6 +6,8 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -49,5 +51,39 @@ public class ProjectService extends AbstrctDBInf {
 
     public TProjectDetail sumByWorkpiece(String workpieceNo) {
         return this.getMapper(TProjectDetailMapper.class).sumByWorkpiece(workpieceNo);
+    }
+
+    public List<TProjectDetail> selectByExample(TProjectDetailExample example) {
+        return this.getMapper(TProjectDetailMapper.class).selectByExample(example);
+    }
+
+    public int insert(TProjectDetail detail) {
+        return this.getMapper(TProjectDetailMapper.class).insertSelective(detail);
+    }
+
+    public int update(TProjectDetail detail) {
+        return this.getMapper(TProjectDetailMapper.class).updateByPrimaryKeySelective(detail);
+    }
+
+    public TProjectBase createProject(TProjectBase project) {
+        project.setEndQuantity(new BigDecimal(0));
+        project.setPickupQuantity(new BigDecimal(0));
+        project.setProceedsStatus("1");
+        project.setActAmt(new BigDecimal(0));
+        project.setApplyDate(new Date());
+        project.setIsValid("0");
+        project.setStatus("1");
+        return project;
+    }
+
+    public TProjectDetail createDetail(TProjectBase project, TProjectDetail detail) {
+        detail.setProjectNo(project.getProjectNo());
+        detail.setCustomerNo(project.getCustomerNo());
+        detail.setBeginDate(project.getBeginDate());
+        detail.setEndDate(project.getEndDate());
+        detail.setIsValid("0");
+        detail.setStatus("1");
+        detail.setApplyDate(new Date());
+        return detail;
     }
 }

@@ -46,13 +46,16 @@ public class CustomerController extends JedaController {
     public ModelAndView index(TCustomer customer, @RequestParam(value = "pi", required = true, defaultValue = "-1") int pageIndex,
                                     @RequestParam(value = "o", required = true, defaultValue = "CUSTOMER_NO desc") String order,
                                     ModelAndView mv, HttpServletRequest request, HttpServletResponse response,
-                                    JedaUser currentUser)throws Exception{
+                                    JedaUser currentUser,String select)throws Exception{
         try {
+            pageSize=3;
             mv=businessOperationQuery(customer,request,pageIndex,order,pageSize,mv,currentUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(null!=select && "1".equals(select)){
+            mv.addObject("select",select);
+        }
         mv.setViewName("resource/customer/index");
         mv.addObject("pi",pageIndex);
         return mv;

@@ -26,8 +26,6 @@
     <script type="text/javascript" src="<%=path%>/js/date/datecontroller.js"></script>
     <script type="text/javascript" src="<%=path%>/js/WindowTracking.js"></script>
     <link type="text/css" rel="stylesheet" href="<%=path%>/css/css-loader.css">
-    <script type="text/javascript" src="<%=path%>/js/provinceCity.js"></script>
-    <script type="text/javascript" src="<%=path%>/js/customerverify/verifycustomer.js"></script>
     <script type="text/javascript" src="<%=path%>/js/info/msgbox.js"></script>
     <script type="text/javascript">
         /***********************************************整体样式控制***********************************************/
@@ -58,19 +56,21 @@
             if(${addtype==2}){
                 $("#goBack").hide();
             }
-
-            <%--if(${edit=='1'}){--%>
-            <%--$("#save").show();--%>
-            <%--$("#goBack").hide();--%>
-            <%--}else if(${edit=='2'}){--%>
-            <%--$("#atable").find("input,button,textarea,select").attr("disabled", "disabled");--%>
-            <%--$("#save").hide();--%>
-            <%--$("#goBack").hide();--%>
-            <%--}--%>
             if(${edit=='2'}){
                 $("#atable").find("input,button,textarea,select").attr("disabled", "disabled");
+                $("#btable").find("input,button,textarea,select").attr("disabled", "disabled");
                 $("#save").hide();
                 $("#goBack").hide();
+                $("button[InputHide='1']").each(function(){
+                    var id=this.id;
+                    $("#"+id).hide();
+                });
+            }else {
+                $("input[InputSize='1']").attr('class', 'input-large');
+            }
+            var days=getDays($("#pBgdate").val(),$("#pEddate").val());
+            if(days>=0){
+                $("#days").val(days);
             }
         });
 
@@ -80,8 +80,41 @@
                 myAlert("温馨提示：","请填写合作商名称！");
                 return;
             }
+            if($("#pBgdate").val()==""){
+                myAlert("温馨提示：","请选择合同预计开始日！");
+                return;
+            }
+            if($("#pEddate").val()==""){
+                myAlert("温馨提示：","请选择合同预计结束日！");
+                return;
+            }
+            if($("input[id^='workpiecename']").val()==""){
+                myAlert("温馨提示：","请选择工件！");
+                return;
+            }
+            if($("select[id^='unit']").val()==""){
+                myAlert("温馨提示：","请选择工件单位！");
+                return;
+            }
+            if($("input[id^='unitPrice']").val()==""){
+                myAlert("温馨提示：","请填写工件单价！");
+                return;
+            }
+            if($("input[id^='quantity']").val()==""){
+                myAlert("温馨提示：","请填写工件数量！");
+                return;
+            }
+            if($("select[id^='processType']").val()==""){
+                myAlert("温馨提示：","请填写工件加工类型！");
+                return;
+            }
+            $("input[money='money']").each(function(){
+                var id=this.id;
+                $("#"+id).val(this.value.replace(/[^\d\.-]/g, ""));
+            });
+
             $.ajax({
-                url:'<%=path%>/customer/save',
+                url:'<%=path%>/project/save',
                 data:$("#expendForm").serializeArray(),
                 dataType:"json",
                 contentType:"application/x-www-form-urlencoded",
@@ -100,7 +133,7 @@
         }
         //返回取消
         function goBack() {
-            window.location.href = "<%=path%>/customer/index";
+            window.location.href = "<%=path%>/project/index";
         }
         $(function(){
             var start = 1960; // 指定开始年份
@@ -179,6 +212,106 @@
             id++;
             $("#rowID").val(id);
         }
+        function getDays(bgDate,endDate){
+            var date11=new Date(bgDate);  //开始时间
+            var date22=new Date(endDate);    //结束时间
+            var date3=date22.getTime()-date11.getTime()  //时间差的毫秒数
+            var days=Math.floor(date3/(24*3600*1000))
+            return days;
+        }
+        function selectC(){
+            window.open("<%=path%>/customer/index?select=1", "选择合作商", "menubar=no,status=no,resizable=no,scrollbars=1,width=1000,height=800pt,top=100,left=100");
+        }
+        function chooceCustomer(cNo,cName){
+            $("#customerName").val(cName);
+            $("#customerNo").val(cNo);
+        }
+        function stend(obj){
+            if($("#pBgdate").val()==""){
+                return;
+            }
+            if($("#pEddate").val()==""){
+                return;
+            }
+            if($("#pBgdate").val()>$("#pEddate").val()){
+                myAlert("温馨提示：","开始日不能大于结束日！");
+                $(obj).val("");
+                $("#days").val("");
+                return;
+            }
+            var days=getDays($("#pBgdate").val(),$("#pEddate").val());
+            if(days){
+                $("#days").val(days);
+            }
+        }
+        function addDetail() {
+            var id=$("#detailCount").val();
+            var str = "<tr name='detailtr' id='detailtr"+id+"'>"+
+                "<td width='16%'>"+
+                    "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"workpiecename' value=''/>"+
+                    "<input type='hidden'  id='"+id+"workpieceno' name='details["+id+"].workpieceNo' value=''/>"+
+                    "<button class='btn' InputHide='1' type='button' onclick='selectWP("+id+")'>选择</button>"+
+                "</td>"+
+                "<td width='8%'>"+
+                    "<select class='input-block-level' name='details["+id+"].unit' id='"+id+"unit'>"+
+                    "<option value=''>请选择</option>"+
+                    "<nt:code ctype='003'></nt:code>"+
+                    "</select>"+
+                "</td>"+
+                "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].unitPrice'  id='"+id+"unitPrice' onblur='calcuteToTal()' onfocus='rmoney(this)' value=''/></td>"+
+                "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].quantity'  id='"+id+"quantity' value='' onblur='calcuteToTal()'/></td>"+
+                "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].totalPrice'  id='"+id+"totalPrice' value=''/></td>"+
+                "<td width='8%'>"+
+                    "<select class='input-block-level' name='details["+id+"].processType' id='"+id+"processType'>"+
+                    "<option value=''>请选择</option>"+
+                    "<nt:code ctype='006'></nt:code>"+
+                    "</select>"+
+                "</td>"+
+                "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].remark'  id='"+id+"remark' value=''/></td>"+
+                "<td width='5%'><button class='btn' type='button' onclick='deleteD("+id+")'>删除</button></td>"+
+            "</tr>";
+            $("#btable").append(str);
+            id=parseInt(id);
+            $("#detailCount").val(id+1);
+        }
+        function deleteD(id) {
+            var trid = "detailtr"+id;
+            $("#"+trid).remove();
+            calcuteToTal();
+        }
+        function selectWP(detailTr) {
+            window.open("<%=path%>/workpiece/index?select=1&detailTr="+detailTr, "选择工件", "menubar=no,status=no,resizable=no,scrollbars=1,width=1000,height=800pt,top=100,left=100");
+        }
+        function chooceWorkpiece(WPno,WPname,detailTr) {
+            $("#"+detailTr+"workpiecename").val(WPname);
+            $("#"+detailTr+"workpieceno").val(WPno);
+        }
+        function calcuteToTal(){
+            var totalQuantity=0;
+            var totalPriceP=0;
+            $("tr[name='detailtr']").each(function(){
+                var id=this.id.substring(8);
+                var unitPrice=0;
+                var quantity=0;
+                if($("#"+id+"unitPrice").val()!=""){
+                    unitPrice=$("#"+id+"unitPrice").val().replace(/[^\d\.-]/g, "");
+                }
+                if($("#"+id+"quantity").val()!=""){
+                    quantity=$("#"+id+"quantity").val();
+                }
+                var totalPrice=parseFloat(unitPrice)*parseFloat(quantity);
+                $("#"+id+"totalPrice").val(fmoneys(totalPrice,2));
+                $("#"+id+"unitPrice").val(fmoneys(unitPrice,2));
+                totalQuantity+=parseFloat($("#"+id+"quantity").val());
+                totalPriceP+=totalPrice;
+            });
+            if(totalQuantity>=0){
+                $("#quantity").val(totalQuantity);
+            }
+            if(totalPriceP>=0){
+                $("#totalPrice").val(fmoneys(totalPriceP,2));
+            }
+        }
     </script>
 
 </head>
@@ -195,133 +328,96 @@
             <input type="hidden" name="edit" value="${edit}" >
             <table id="atable">
                 <tr>
-                    <td colspan="4"><h4>基本信息</h4></td>
+                    <td colspan="4"><h4>合同基本信息</h4></td>
                 </tr>
                 <tr>
-                    <td>编号</td>
+                    <td>合同编号</td>
                     <td>
-                        <input readonly type="text" value="${customer.customerNo}"/>
-                        <input type="hidden" name="customerNo" id="customerNo" value="${customer.customerNo}"/>
+                        <input readonly type="text" value="${project.projectNo}"/>
+                        <input type="hidden" name="project.projectNo" id="projectNo" value="${project.projectNo}"/>
                     </td>
-                    <td>合作商名称</td>
+                    <td>合作商</td>
                     <td>
-                        <input type="text" name="customerName" id="customerName" value="${customer.customerName}"/>
+                        <input InputSize="1" type="text" readonly id="customerName" value="<nt:cusname cuscomerid="${project.customerNo}"></nt:cusname>"/>
+                        <input type="hidden" id="customerNo" name="project.customerNo" value="${project.customerNo}"/>
+                        <button InputHide="1" type="button" onclick="selectC()" id="selectCustomer" >选择</button>
                     </td>
+                </tr>
+                <tr>
+                    <td>总数量</td>
+                    <td><input readonly type="text" id="quantity" name="project.quantity" value="${project.quantity}" ></td>
+                    <td>总金额</td>
+                    <td><input readonly type="text" money="money" id="totalPrice" name="project.totalPrice" value="<fmt:formatNumber type='number' value='${project.totalPrice}' pattern='#,##0.00'/>" ></td>
+                </tr>
+                <tr>
+                    <td>开始日期</td>
+                    <td><input type="text" id="pBgdate" name="project.beginDate" value="<fmt:formatDate value='${project.beginDate}' pattern='yyyy-MM-dd'/>" onchange="stend(this);"/></td>
+                    <td>结束日期</td>
+                    <td><input type="text" id="pEddate" name="project.endDate" value="<fmt:formatDate value='${project.endDate}' pattern='yyyy-MM-dd'/>" onchange="stend(this);"/></td>
+                </tr>
+                <tr>
+                    <td>预期天数</td>
+                    <td><input readonly type="text" id="days" value="" ></td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 <tr>
                     <td>备注</td>
-                    <td colspan="3"><textarea cols="10" name="remark">${customer.remark}</textarea> </td>
+                    <td colspan="3"><textarea cols="10" name="project.remark">${project.remark}</textarea> </td>
                 </tr>
                 <tr>
                     <td>录入人</td>
-                    <td>${customer.applyOpr}</td>
+                    <td>${project.applyOpr}</td>
                     <td>录入日期</td>
-                    <td><fmt:formatDate value="${customer.applyDate}" pattern="yyyy-MM-dd" ></fmt:formatDate></td>
+                    <td><fmt:formatDate value="${project.applyDate}" pattern="yyyy-MM-dd" ></fmt:formatDate></td>
                 </tr>
             </table>
-            <%--<div>--%>
-            <%--<table id="atable">--%>
-            <%--<tr>--%>
-            <%--<td colspan="4"><h4>基本信息</h4></td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>机构编号</td>--%>
-            <%--<td>--%>
-            <%--<input readonly type="text" value="${tCustmorBasic.custmorNo}"/>--%>
-            <%--<input type="hidden" name="custmorNo" id="custmorNo" value="${tCustmorBasic.custmorNo}"/>--%>
-            <%--</td>--%>
-            <%--<td>机构名称</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="custmorName" id="custmorName" value="${tCustmorBasic.custmorName}"/>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>机构类型</td>--%>
-            <%--<td>--%>
-            <%--<select name="custmorType">--%>
-            <%--<option value="">请选择</option>--%>
-            <%--<nt:code index="${tCustmorBasic.custmorType}" ctype="004"></nt:code>--%>
-            <%--</select>--%>
-            <%--</td>--%>
-            <%--<td>所属行业</td>--%>
-            <%--<td>--%>
-            <%--<select name="indNo">--%>
-            <%--<option value="">请选择</option>--%>
-            <%--<nt:code index="${tCustmorBasic.indNo}" ctype="005"></nt:code>--%>
-            <%--</select>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td >注册资本（千万）</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="regAmt" id="regAmt" value="${tCustmorBasic.regAmt}"/>--%>
-            <%--</td>--%>
-            <%--<td >企业性质</td>--%>
-            <%--<td>--%>
-            <%--<select name="ownType">--%>
-            <%--<option value="">请选择</option>--%>
-            <%--<nt:code index="${tCustmorBasic.ownType}" ctype="006"></nt:code>--%>
-            <%--</select>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>组织机构代码</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="orgCode" id="orgCode" value="${tCustmorBasic.orgCode}"/>--%>
-            <%--</td>--%>
-            <%--<td>地址</td>--%>
-            <%--<td><input type="text" name="addr" id="addr" value="${tCustmorBasic.addr}"/></td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>银行基本户名称</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="bankName" id="bankName" value="${tCustmorBasic.bankName}"/>--%>
-            <%--</td>--%>
-            <%--<td>银行基本户账号</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="accNo" id="accNo" value="${tCustmorBasic.accNo}"/>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>联系人</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="connName" id="connName" value="${tCustmorBasic.connName}"/>--%>
-            <%--</td>--%>
-            <%--<td>联系电话</td>--%>
-            <%--<td>--%>
-            <%--<input type="text" name="connPhone" id="connPhone" value="${tCustmorBasic.connPhone}"/>--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>信用评级</td>--%>
-            <%--<td>--%>
-            <%--<select name="credit">--%>
-            <%--<option value="">请选择</option>--%>
-            <%--<nt:code index="${tCustmorBasic.credit}" ctype="007"></nt:code>--%>
-            <%--</select>--%>
-            <%--</td>--%>
-            <%--<td></td>--%>
-            <%--<td></td>--%>
-            <%--</tr>--%>
-            <%--</table>--%>
-            <%--<table id="creditTable">--%>
-            <%--<input type='hidden' id='txtTRLastIndex' value="2" />--%>
-            <%--<tr>--%>
-            <%--<td><strong>授信信息</strong></td>--%>
-            <%--<td colspan="4" style="text-align:right;">--%>
-            <%--<button type="button" id="add" onclick="addCredit()">添加</button>--%>
-            <%--&lt;%&ndash;<button type="button" id="delete" onclick="deleteCredit()">删除</button>&ndash;%&gt;--%>
-            <%--</td>--%>
-            <%--</tr>--%>
-            <%--<tr>--%>
-            <%--<td>授信类别</td>--%>
-            <%--<td>授信额度</td>--%>
-            <%--<td>授信开始日</td>--%>
-            <%--<td>授信到期日</td>--%>
-            <%--<td>操作</td>--%>
-            <%--</tr>--%>
-            <%--</table>--%>
-            <%--</div>--%>
+            <table id="btable">
+                <input type="hidden" id="detailCount" value="${fn:length(details)}">
+                <tr>
+                    <td colspan="8"><h5>合同明细</h5></td>
+                </tr>
+                <tr>
+                    <td width="16%">工件</td>
+                    <td width="8%">单位</td>
+                    <td width="8%">单价</td>
+                    <td width="8%">数量</td>
+                    <td width="8%">总价</td>
+                    <td width="8%">加工类型</td>
+                    <%--<td>开始日期</td>--%>
+                    <%--gggg<td>结束日期</td>--%>
+                    <%--<td>天数</td>--%>
+                    <td width="8%">备注</td>
+                    <td width="5%"><button type="button" onclick="addDetail();">添加</button></td>
+                </tr>
+                <c:forEach var="detail" items="${details}" varStatus="status">
+                    <tr name="detailtr" id="detailtr${status.count-1}">
+                        <td>
+                            <input type="hidden" name="details[${status.count-1}].id" value="${detail.id}">
+                            <input InputSize="1" readonly type="text" id="${status.count-1}workpiecename" value="<nt:workpiecename workpieceno="${detail.workpieceNo}"></nt:workpiecename>" />
+                            <input type="hidden"  id="${status.count-1}workpieceno" name="details[${status.count-1}].workpieceNo" value="${detail.workpieceNo}"/>
+                            <button InputHide="1" id="${status.count-1}select" type="button" onclick="selectWP('${status.count-1}')">选择</button>
+                        </td>
+                        <td>
+                            <select name="details[${status.count-1}].unit" id="${status.count-1}unit">
+                                <option value="">请选择</option>
+                                <nt:code index="${detail.unit}" ctype="003"></nt:code>
+                            </select>
+                        </td>
+                        <td><input type="text" money="money" name="details[${status.count-1}].unitPrice"  id="${status.count-1}unitPrice" onblur="calcuteToTal()" onfocus="rmoney(this)" value="<fmt:formatNumber type='number' value='${detail.unitPrice}' pattern='#,##0.00'/>"/></td>
+                        <td><input type="text" name="details[${status.count-1}].quantity"  id="${status.count-1}quantity" value="${detail.quantity}" onblur="calcuteToTal()"/></td>
+                        <td><input type="text" money="money" name="details[${status.count-1}].totalPrice"  id="${status.count-1}totalPrice" value="<fmt:formatNumber type='number' value='${detail.totalPrice}' pattern='#,##0.00'/>"/></td>
+                        <td>
+                            <select name="details[${status.count-1}].processType" id="${status.count-1}processType">
+                                <option value="">请选择</option>
+                                <nt:code index="${detail.processType}" ctype="006"></nt:code>
+                            </select>
+                        </td>
+                        <td><input type="text" name="details[${status.count-1}].remark"  id="${status.count-1}remark" value="${detail.remark}"/></td>
+                        <td><button type="button" onclick="deleteD('${status.count-1}')">删除</button></td>
+                    </tr>
+                </c:forEach>
+            </table>
         </form>
     </div>
 </div>

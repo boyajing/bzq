@@ -21,7 +21,7 @@ public class TSysSequenceService extends AbstrctDBInf {
     /**
      * 投资项目
      */
-    public static final String TZ_PROJECT = "T";
+    public static final String TZ_PROJECT = "TZ";
     /**
      * 客户
      */

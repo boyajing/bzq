@@ -61,6 +61,16 @@
         </attribute>
     </tag>
     <tag>
+        <name>workpiecename</name>
+        <tagclass>com.nantian.utils.tag.SysWorkpieceNameTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>workpieceno</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
         <name>coursename</name>
         <tagclass>com.nantian.utils.tag.SysCourseNameTag</tagclass>
         <bodycontent>JSP</bodycontent>

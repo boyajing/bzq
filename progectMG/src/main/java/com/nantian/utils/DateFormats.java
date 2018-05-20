@@ -10,25 +10,72 @@ import java.util.Date;
  */
 public class DateFormats {
     /**
-          * 计算两个日期之间相差的天数
-          * @param smdate 较小的时间
-          * @param bdate  较大的时间
-          * @return 相差天数
-          * @throws ParseException
-          */
-        public static short daysBetween(Date smdate,Date bdate) throws ParseException
-        {
-                SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-                smdate=sdf.parse(sdf.format(smdate));
-                bdate=sdf.parse(sdf.format(bdate));
-                Calendar cal = Calendar.getInstance();
-                cal.setTime(smdate);
-                long time1 = cal.getTimeInMillis();
-                cal.setTime(bdate);
-                long time2 = cal.getTimeInMillis();
-                long between_days=(time2-time1)/(1000*3600*24);
-               return Short.parseShort(String.valueOf(between_days));
+     * 计算两个日期之间相差的天数
+     * @param smdate 较小的时间
+     * @param bdate  较大的时间
+     * @return 相差天数
+     * @throws ParseException
+     */
+    public static short daysBetween(Date smdate,Date bdate) throws ParseException {
+        SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+        smdate=sdf.parse(sdf.format(smdate));
+        bdate=sdf.parse(sdf.format(bdate));
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(smdate);
+        long time1 = cal.getTimeInMillis();
+        cal.setTime(bdate);
+        long time2 = cal.getTimeInMillis();
+        long between_days=(time2-time1)/(1000*3600*24);
+        return Short.parseShort(String.valueOf(between_days));
+    }
+
+    public String dateToStrDT(Date date) {
+        String dateTimeString =null;
+        if(null!=date){
+            SimpleDateFormat sdfDateTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            dateTimeString=sdfDateTime.format(date);
+        }
+        return dateTimeString;
+    }
+    public String dateToStrD(Date date) {
+        String dateTimeString =null;
+        if(null!=date) {
+            SimpleDateFormat sdfDateTime = new SimpleDateFormat("yyyy-MM-dd");
+            dateTimeString = sdfDateTime.format(date);
+        }
+        return dateTimeString;
+    }
+    public Date stringToDate(String dateString){
+        Date date= null;
+        try {
+            if(null!=dateString && !"".equals(dateString)){
+                SimpleDateFormat sdfDateTime=new SimpleDateFormat("yyyy-MM-dd");
+                date = sdfDateTime.parse(dateString);
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
+    public Date stringToDateTime(String dateString) {
+        Date date= null;
+        try {
+            if(null!=dateString && !"".equals(dateString)){
+                SimpleDateFormat sdfDateTime=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                date = sdfDateTime.parse(dateString);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return date;
+    }
 
-
+    public String dateTimeToString(Date date) {
+        String str=null;
+        if(null!=date){
+            SimpleDateFormat sdfDateTime=new SimpleDateFormat("yyyyMMddHHmmss");
+            str=sdfDateTime.format(date);
+        }
+        return str;
+    }
 }

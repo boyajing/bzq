@@ -53,6 +53,21 @@
         }
         function deleteProject(){
             var cusNo = $("input[name='checkboxs']:checked").val();
+            $.ajax({
+                url:'<%=path%>/project/countProjectByproject?projectNo='+cusNo,
+                type: "GET",
+                success:function(data){
+                    if(data>0){
+                        myAlert("温馨提示","此合作商下有合同，不能删除！");
+                    }else{
+                        deleteCus();
+
+                    }
+                }
+            });
+        }
+        function deleteCus(){
+            var cusNo = $("input[name='checkboxs']:checked").val();
             <%--window.location.href = "<%=path%>/project/delete?pi=${pi}&projectNo="+cusNo;--%>
             $.ajax({
                 url:'<%=path%>/project/delete?projectNo='+cusNo,
@@ -68,10 +83,10 @@
         }
 
         function back() {
-            window.location.href="<%=path%>/project/index?time=${time}";
+            window.location.href="<%=path%>/project/index";
         }
         function query(){
-            $("#queryForm").attr("action", "<%=path%>/project/index?time=${time}").submit();
+            $("#queryForm").attr("action", "<%=path%>/project/index").submit();
         }
         function xgsc(){
             //var a = window.parent.isShow();
