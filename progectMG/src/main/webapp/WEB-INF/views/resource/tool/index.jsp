@@ -105,12 +105,12 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/tool/updateTool?toolNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/tool/updateTool?toolNo="+id+"&edit=2", "frame", "height=600,width=1000,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
         function chooseT() {
             var temp = $("input[name='checkboxs']:checked");
             var businessId=temp.val();
-            opener.chooceWorkpiece(businessId.split("&&")[0],businessId.split("&&")[1],${detailTr});
+            opener.chooceTool(businessId.split("&&")[0],businessId.split("&&")[1],${detailTr});
             window.close();
         }
     </script>
@@ -146,7 +146,7 @@
             <button type="button" onClick="del()">删除</button>
         </c:if>
         <c:if test="${select==1}">
-            <button type="button" onclick="chooseWP()">选择</button>
+            <button type="button" onclick="chooseT()">选择</button>
         </c:if>
         <c:if test="${empty select}">
             <button type="button" onclick="upFile()">管理文件</button>

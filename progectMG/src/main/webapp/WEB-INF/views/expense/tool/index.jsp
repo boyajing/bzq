@@ -36,8 +36,8 @@
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
-                var custmorNo=temp.val();
-                window.location.href = "<%=path%>/customer/updateCustomer?customerNo="+custmorNo;
+                var id=temp.val();
+                window.location.href = "<%=path%>/expense/expenseTool?edit=1&id="+id;
             } else {
                 myAlert("温馨提示","请选中一条记录");
             }
@@ -105,7 +105,7 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/customer/updateCustomer?customerNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/expense/expenseTool?id="+id+"&edit=2", "frame", "height=600,width=1000,top=100,left=200,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
         function chooseC() {
             var temp = $("input[name='checkboxs']:checked");
@@ -155,6 +155,7 @@
                 <th rowspan="1"></th>
                 <th rowspan="1">支出日期</th>
                 <th rowspan="1">工具名称</th>
+                <th rowspan="1">单位</th>
                 <th rowspan="1">数量</th>
                 <th rowspan="1">单价</th>
                 <th rowspan="1">总价</th>
@@ -166,8 +167,9 @@
             <c:forEach var="item" items="${list}">
                 <tr>
                     <td><input rec="true" type="radio" name="checkboxs" value="${item.id}"></td>
-                    <td><fmt:formatDate value="${item.expenseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                    <td><a onclick="detailC('${item.id}')"><fmt:formatDate value="${item.expenseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></a></td>
                     <td><nt:toolname toolno="${item.toolNo}"></nt:toolname></td>
+                    <td><nt:codeValue index="${item.unit}" ctype="003"></nt:codeValue></td>
                     <td>${item.quantity}</td>
                     <td><fmt:formatNumber value="${item.unitPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
                     <td><fmt:formatNumber value="${item.totalPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>

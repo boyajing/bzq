@@ -1,5 +1,6 @@
 package com.byj.daoExtend;
 
+import com.byj.dao.TExpenseDetail;
 import com.byj.dao.TProjectBase;
 import com.byj.dao.TProjectDetail;
 import com.byj.dao.TSalary;

@@ -79,7 +79,7 @@
         }
         function xgsc(){
             //var a = window.parent.isShow();
-            window.open("<%=path%>/fileManager/index", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/fileManager/index", "frame", "height=600,width=1000,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
         function upFile(){
             var temp = $("input[name='checkboxs']:checked");

@@ -5,6 +5,7 @@ import bas.jeda.controller.LoginRequired;
 import bas.jeda.dao.JedaUser;
 import bas.jeda.dao.JedaUserExample;
 import com.byj.dao.*;
+import com.byj.daoExtend.ExpenseVo;
 import com.byj.daoExtend.ProjectVo;
 import com.byj.daoExtend.UserVo;
 import com.byj.service.ExpenseService;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -200,8 +202,47 @@ public class ExpenseController extends JedaController {
 
     @LoginRequired
     @RequestMapping(value = "/expenseTool", method = RequestMethod.GET)
-    public ModelAndView expenseTool(ModelAndView mv, HttpServletRequest request, HttpServletResponse response, JedaUser currentUser)throws Exception{
+    public ModelAndView expenseTool(ModelAndView mv, HttpServletRequest request, HttpServletResponse response, JedaUser currentUser,String edit,String id)throws Exception{
+        if(null!=edit && null!=id){
+            TExpenseDetail detail =  expenseService.selectByPrimaryKey(new BigDecimal(id));
+            List<TExpenseDetail> details= new ArrayList<TExpenseDetail>();
+            details.add(detail);
+            mv.addObject("details",details);
+        }
+        mv.addObject("edit",edit);
         mv.setViewName("expense/tool/expenseTool");
         return mv;
+    }
+
+    @LoginRequired
+    @RequestMapping(value = "/saveTool", method = RequestMethod.POST)
+    public void saveTool(ModelAndView mv, HttpServletRequest request, HttpServletResponse response, JedaUser currentUser,ExpenseVo expense,String edit)throws Exception{
+        int result=0;
+        try {
+            if(null!=expense && null!=expense.getDetails()){
+                List<TExpenseDetail> details = expense.getDetails();
+                if("1".equals(edit)){
+                    for (TExpenseDetail detail : details) {
+                        if(null!=detail.getId()){
+                            expenseService.update(detail);
+                        }
+                    }
+                }else{
+                    for (TExpenseDetail detail : details) {
+                        if(null!=detail.getToolNo()){
+                            detail.setExpenseType("2");
+                            detail.setIsValid("0");
+                            detail.setApplyDate(new Date());
+                            detail.setApplyOpr(currentUser.getUserId());
+                            expenseService.insert(detail);
+                        }
+                    }
+                }
+                result=1;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        returnResult(response,result);
     }
 }

@@ -6,6 +6,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -35,5 +36,17 @@ public class ExpenseService extends AbstrctDBInf {
 
     public long countByExample(TExpenseDetailExample example) {
         return this.getMapper(TExpenseDetailMapper.class).countByExample(example);
+    }
+
+    public int insert(TExpenseDetail detail) {
+        return this.getMapper(TExpenseDetailMapper.class).insertSelective(detail);
+    }
+
+    public TExpenseDetail selectByPrimaryKey(BigDecimal id) {
+        return this.getMapper(TExpenseDetailMapper.class).selectByPrimaryKey(id);
+    }
+
+    public int update(TExpenseDetail detail) {
+        return this.getMapper(TExpenseDetailMapper.class).updateByPrimaryKeySelective(detail);
     }
 }

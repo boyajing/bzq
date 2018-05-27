@@ -76,36 +76,20 @@
 
         //保存
         function save() {
-            if($("#customerName").val()==""){
-                myAlert("温馨提示：","请填写合作商名称！");
-                return;
-            }
-            if($("#pBgdate").val()==""){
-                myAlert("温馨提示：","请选择合同预计开始日！");
-                return;
-            }
-            if($("#pEddate").val()==""){
-                myAlert("温馨提示：","请选择合同预计结束日！");
-                return;
-            }
-            if($("input[id^='workpiecename']").val()==""){
-                myAlert("温馨提示：","请选择工件！");
+            if($("input[id^='toolname']").val()==""){
+                myAlert("温馨提示：","请选择工具！");
                 return;
             }
             if($("select[id^='unit']").val()==""){
-                myAlert("温馨提示：","请选择工件单位！");
+                myAlert("温馨提示：","请选择工具单位！");
                 return;
             }
             if($("input[id^='unitPrice']").val()==""){
-                myAlert("温馨提示：","请填写工件单价！");
+                myAlert("温馨提示：","请填写工具单价！");
                 return;
             }
             if($("input[id^='quantity']").val()==""){
-                myAlert("温馨提示：","请填写工件数量！");
-                return;
-            }
-            if($("select[id^='processType']").val()==""){
-                myAlert("温馨提示：","请填写工件加工类型！");
+                myAlert("温馨提示：","请填写工具数量！");
                 return;
             }
             $("input[money='money']").each(function(){
@@ -114,7 +98,7 @@
             });
 
             $.ajax({
-                url:'<%=path%>/project/save',
+                url:'<%=path%>/expense/saveTool',
                 data:$("#expendForm").serializeArray(),
                 dataType:"json",
                 contentType:"application/x-www-form-urlencoded",
@@ -133,7 +117,7 @@
         }
         //返回取消
         function goBack() {
-            window.location.href = "<%=path%>/project/index?time=1";
+            window.location.href = "<%=path%>/expense/indexTool";
         }
         $(function(){
             var start = 1960; // 指定开始年份
@@ -247,9 +231,12 @@
         function addDetail() {
             var id=$("#detailCount").val();
             var str = "<tr name='detailtr' id='detailtr"+id+"'>"+
+                "<td width='8%'>"+
+                    "<input type='text' name='details["+id+"].expenseDate'  id='"+id+"expensedate'  value=''/>"+
+                "</td>"+
                 "<td width='16%'>"+
-                "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"workpiecename' value=''/>"+
-                "<input type='hidden'  id='"+id+"workpieceno' name='details["+id+"].workpieceNo' value=''/>"+
+                "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"toolname' value=''/>"+
+                "<input type='hidden'  id='"+id+"toolno' name='details["+id+"].toolNo' value=''/>"+
                 "<button class='btn' InputHide='1' type='button' onclick='selectT("+id+")'>选择</button>"+
                 "</td>"+
                 "<td width='8%'>"+
@@ -261,18 +248,40 @@
                 "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].unitPrice'  id='"+id+"unitPrice' onblur='calcuteToTal()' onfocus='rmoney(this)' value=''/></td>"+
                 "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].quantity'  id='"+id+"quantity' value='' onblur='calcuteToTal()'/></td>"+
                 "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].totalPrice'  id='"+id+"totalPrice' value=''/></td>"+
-                "<td width='8%'>"+
-                "<select class='input-block-level' name='details["+id+"].processType' id='"+id+"processType'>"+
-                "<option value=''>请选择</option>"+
-                "<nt:code ctype='006'></nt:code>"+
-                "</select>"+
-                "</td>"+
                 "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].remark'  id='"+id+"remark' value=''/></td>"+
                 "<td width='5%'><button class='btn' type='button' onclick='deleteD("+id+")'>删除</button></td>"+
                 "</tr>";
-            $("#btable").append(str);
+            $("#atable").append(str);
             id=parseInt(id);
             $("#detailCount").val(id+1);
+            $(function () {
+                $('button').button();
+                $('input[id$=date]').attr({onfocus:"this.blur()"});
+                //年月日
+                //$('body').on('datepicker','input[id$=date]',function);
+                $('input[id$=date]').datepicker({
+                    dateFormat: 'yy-mm-dd',
+                    //dayNames : ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+                    //dayNamesShort : ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'],
+                    dayNamesMin: ['日', '一', '二', '三', '四', '五', '六'],
+                    monthNames: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'],
+                    monthNamesShort: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
+                    //appendText : '日历',
+                    showWeek: false,
+                    weekHeader: '周',
+                    firstDay: 0,
+                    changeMonth: true,
+                    changeYear: true,
+                    //yearSuffix : '年',
+                    showMonthAfterYear: true,
+                    showButtonPanel: true,
+                    closeText: '关闭',
+                    currentText: '今天',
+                    nextText: '下个月',
+                    prevText: '上个月',
+                    yearRange: '1949:2200'
+                });
+            });
         }
         function deleteD(id) {
             var trid = "detailtr"+id;
@@ -327,10 +336,12 @@
         <form id="expendForm" method="post">
             <table id="atable">
                 <input type="hidden" id="detailCount" value="0">
+                <input type="hidden" name="edit" value="${edit}">
                 <tr>
                     <td colspan="8"><h5>材料费支出</h5></td>
                 </tr>
                 <tr>
+                    <td width="8%">支出时间</td>
                     <td width="16%">工具</td>
                     <td width="8%">单位</td>
                     <td width="8%">单价</td>
@@ -341,6 +352,7 @@
                 </tr>
                 <c:forEach var="detail" items="${details}" varStatus="status">
                     <tr name="detailtr" id="detailtr${status.count-1}">
+                        <td><input type="text" name="details[${status.count-1}].expenseDate"  id="${status.count-1}expensedate"  value="<fmt:formatDate value='${detail.expenseDate}' pattern='yyyy-MM-dd'/>"/></td>
                         <td>
                             <input type="hidden" name="details[${status.count-1}].id" value="${detail.id}">
                             <input InputSize="1" readonly type="text" id="${status.count-1}toolname" value="<nt:toolname toolno="${detail.toolNo}"></nt:toolname>" />
@@ -348,7 +360,10 @@
                             <button InputHide="1" id="${status.count-1}select" type="button" onclick="selectT('${status.count-1}')">选择</button>
                         </td>
                         <td>
-
+                            <select class='input-block-level' name='details[${status.count-1}].unit' id='"+id+"unit'>
+                                <option value=''>请选择</option>
+                                <nt:code ctype='003'></nt:code>
+                            </select>
                         </td>
                         <td><input type="text" money="money" name="details[${status.count-1}].unitPrice"  id="${status.count-1}unitPrice" onblur="calcuteToTal()" onfocus="rmoney(this)" value="<fmt:formatNumber type='number' value='${detail.unitPrice}' pattern='#,##0.00'/>"/></td>
                         <td><input type="text" name="details[${status.count-1}].quantity"  id="${status.count-1}quantity" value="${detail.quantity}" onblur="calcuteToTal()"/></td>
