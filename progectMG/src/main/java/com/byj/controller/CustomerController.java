@@ -48,7 +48,6 @@ public class CustomerController extends JedaController {
                                     ModelAndView mv, HttpServletRequest request, HttpServletResponse response,
                                     JedaUser currentUser,String select)throws Exception{
         try {
-            pageSize=3;
             mv=businessOperationQuery(customer,request,pageIndex,order,pageSize,mv,currentUser);
         } catch (Exception e) {
             e.printStackTrace();

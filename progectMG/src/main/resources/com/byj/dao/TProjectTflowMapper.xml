@@ -18,6 +18,7 @@
     <result column="TYPE" jdbcType="VARCHAR" property="type" />
     <result column="DETAIL_ID" jdbcType="DECIMAL" property="detailId" />
     <result column="WORKPIECE" jdbcType="VARCHAR" property="workpiece" />
+    <result column="ACT_AMT" jdbcType="DECIMAL" property="actAmt" />
   </resultMap>
   <sql id="Example_Where_Clause">
     <where>
@@ -80,7 +81,7 @@
   <sql id="Base_Column_List">
     ID, PROJECT_NO, BEGIN_DATE, END_DATE, ACT_QUANTITY, REMAIN_QUANTITY, ACT_PICKUP, 
     REMAIN_PICKUP, ACT_DATE, IS_VALID, APPLY_OPR, APPLY_DATE, REMARK, TYPE, DETAIL_ID, 
-    WORKPIECE
+    WORKPIECE, ACT_AMT
   </sql>
   <select id="selectByExample" parameterType="com.byj.dao.TProjectTflowExample" resultMap="BaseResultMap">
     select
@@ -118,13 +119,13 @@
       ACT_PICKUP, REMAIN_PICKUP, ACT_DATE, 
       IS_VALID, APPLY_OPR, APPLY_DATE, 
       REMARK, TYPE, DETAIL_ID, 
-      WORKPIECE)
+      WORKPIECE, ACT_AMT)
     values (#{id,jdbcType=DECIMAL}, #{projectNo,jdbcType=VARCHAR}, #{beginDate,jdbcType=DATE}, 
       #{endDate,jdbcType=DATE}, #{actQuantity,jdbcType=DECIMAL}, #{remainQuantity,jdbcType=DECIMAL}, 
       #{actPickup,jdbcType=DECIMAL}, #{remainPickup,jdbcType=DECIMAL}, #{actDate,jdbcType=DATE}, 
       #{isValid,jdbcType=VARCHAR}, #{applyOpr,jdbcType=VARCHAR}, #{applyDate,jdbcType=DATE}, 
       #{remark,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, #{detailId,jdbcType=DECIMAL}, 
-      #{workpiece,jdbcType=VARCHAR})
+      #{workpiece,jdbcType=VARCHAR}, #{actAmt,jdbcType=DECIMAL})
   </insert>
   <insert id="insertSelective" parameterType="com.byj.dao.TProjectTflow">
     insert into T_PROJECT_TFLOW
@@ -177,6 +178,9 @@
       <if test="workpiece != null">
         WORKPIECE,
       </if>
+      <if test="actAmt != null">
+        ACT_AMT,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides=",">
       <if test="id != null">
@@ -226,6 +230,9 @@
       </if>
       <if test="workpiece != null">
         #{workpiece,jdbcType=VARCHAR},
+      </if>
+      <if test="actAmt != null">
+        #{actAmt,jdbcType=DECIMAL},
       </if>
     </trim>
   </insert>
@@ -286,6 +293,9 @@
       <if test="record.workpiece != null">
         WORKPIECE = #{record.workpiece,jdbcType=VARCHAR},
       </if>
+      <if test="record.actAmt != null">
+        ACT_AMT = #{record.actAmt,jdbcType=DECIMAL},
+      </if>
     </set>
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
@@ -308,7 +318,8 @@
       REMARK = #{record.remark,jdbcType=VARCHAR},
       TYPE = #{record.type,jdbcType=VARCHAR},
       DETAIL_ID = #{record.detailId,jdbcType=DECIMAL},
-      WORKPIECE = #{record.workpiece,jdbcType=VARCHAR}
+      WORKPIECE = #{record.workpiece,jdbcType=VARCHAR},
+      ACT_AMT = #{record.actAmt,jdbcType=DECIMAL}
     <if test="_parameter != null">
       <include refid="Update_By_Example_Where_Clause" />
     </if>
@@ -361,6 +372,9 @@
       <if test="workpiece != null">
         WORKPIECE = #{workpiece,jdbcType=VARCHAR},
       </if>
+      <if test="actAmt != null">
+        ACT_AMT = #{actAmt,jdbcType=DECIMAL},
+      </if>
     </set>
     where ID = #{id,jdbcType=DECIMAL}
   </update>
@@ -380,7 +394,8 @@
       REMARK = #{remark,jdbcType=VARCHAR},
       TYPE = #{type,jdbcType=VARCHAR},
       DETAIL_ID = #{detailId,jdbcType=DECIMAL},
-      WORKPIECE = #{workpiece,jdbcType=VARCHAR}
+      WORKPIECE = #{workpiece,jdbcType=VARCHAR},
+      ACT_AMT = #{actAmt,jdbcType=DECIMAL}
     where ID = #{id,jdbcType=DECIMAL}
   </update>
   <select id="selectByExampleWithRowbounds" parameterType="com.byj.dao.TProjectTflowExample" resultMap="BaseResultMap">

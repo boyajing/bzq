@@ -525,4 +525,8 @@
     from t_project_detail t
     where t.is_valid='0' and t.workpiece_no = #{workpieceNo,jdbcType=VARCHAR}
   </select>
+  <select id="sumByProject" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select t.project_no project_no,sum(t.quantity) quantity,sum(t.end_quantity) end_quantity,sum(t.pickup_quantity) pickup_quantity
+from t_project_detail t where t.is_valid='0' group by t.project_no having t.project_no=#{projectNo,jdbcType=VARCHAR}
+  </select>
 </mapper>

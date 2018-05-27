@@ -36,6 +36,8 @@ public class TProjectTflow {
 
     private String workpiece;
 
+    private BigDecimal actAmt;
+
     public BigDecimal getId() {
         return id;
     }
@@ -164,6 +166,14 @@ public class TProjectTflow {
         this.workpiece = workpiece == null ? null : workpiece.trim();
     }
 
+    public BigDecimal getActAmt() {
+        return actAmt;
+    }
+
+    public void setActAmt(BigDecimal actAmt) {
+        this.actAmt = actAmt;
+    }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -186,6 +196,7 @@ public class TProjectTflow {
         sb.append(", type=").append(type);
         sb.append(", detailId=").append(detailId);
         sb.append(", workpiece=").append(workpiece);
+        sb.append(", actAmt=").append(actAmt);
         sb.append("]");
         return sb.toString();
     }
@@ -217,7 +228,8 @@ public class TProjectTflow {
             && (this.getRemark() == null ? other.getRemark() == null : this.getRemark().equals(other.getRemark()))
             && (this.getType() == null ? other.getType() == null : this.getType().equals(other.getType()))
             && (this.getDetailId() == null ? other.getDetailId() == null : this.getDetailId().equals(other.getDetailId()))
-            && (this.getWorkpiece() == null ? other.getWorkpiece() == null : this.getWorkpiece().equals(other.getWorkpiece()));
+            && (this.getWorkpiece() == null ? other.getWorkpiece() == null : this.getWorkpiece().equals(other.getWorkpiece()))
+            && (this.getActAmt() == null ? other.getActAmt() == null : this.getActAmt().equals(other.getActAmt()));
     }
 
     @Override
@@ -240,6 +252,7 @@ public class TProjectTflow {
         result = prime * result + ((getType() == null) ? 0 : getType().hashCode());
         result = prime * result + ((getDetailId() == null) ? 0 : getDetailId().hashCode());
         result = prime * result + ((getWorkpiece() == null) ? 0 : getWorkpiece().hashCode());
+        result = prime * result + ((getActAmt() == null) ? 0 : getActAmt().hashCode());
         return result;
     }
 }

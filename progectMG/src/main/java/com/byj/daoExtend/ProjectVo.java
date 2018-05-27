@@ -2,6 +2,7 @@ package com.byj.daoExtend;
 
 import com.byj.dao.TProjectBase;
 import com.byj.dao.TProjectDetail;
+import com.byj.dao.TSalary;
 
 import java.util.List;
 
@@ -11,6 +12,15 @@ import java.util.List;
 public class ProjectVo {
     private TProjectBase project;
     private List<TProjectDetail> details;
+    private List<TSalary> salaryList;
+
+    public List<TSalary> getSalaryList() {
+        return salaryList;
+    }
+
+    public void setSalaryList(List<TSalary> salaryList) {
+        this.salaryList = salaryList;
+    }
 
     public TProjectBase getProject() {
         return project;

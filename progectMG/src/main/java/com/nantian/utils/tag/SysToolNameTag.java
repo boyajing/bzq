@@ -14,11 +14,11 @@ import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
- * Created by Administrator on 2018/5/19 0019.
+ * Created by Administrator on 2018/5/26 0026.
  */
-public class SysWorkpieceNameTag extends BodyTagSupport {
+    public class SysToolNameTag extends BodyTagSupport {
     private static ApplicationContext ctx = null;
-    private String workpieceno;
+    private String toolno;
     private StringBuffer sb;
     private PageContext pageContext;
 
@@ -27,16 +27,16 @@ public class SysWorkpieceNameTag extends BodyTagSupport {
         this.pageContext = pageContext;
     }
 
-    public String getWorkpieceno() {
-        return workpieceno;
+    public String getToolno() {
+        return toolno;
     }
 
-    public void setWorkpieceno(String workpieceno) {
-        this.workpieceno = workpieceno;
+    public void setToolno(String toolno) {
+        this.toolno = toolno;
     }
 
     public int doStartTag() throws JspException {
-        if ((this.workpieceno == null) || (this.workpieceno.trim().length() == 0)) {
+        if ((this.toolno == null) || (this.toolno.trim().length() == 0)) {
             sb = new StringBuffer();
             return SKIP_BODY;
         }
@@ -46,16 +46,16 @@ public class SysWorkpieceNameTag extends BodyTagSupport {
                 ctx = WebApplicationContextUtils.getRequiredWebApplicationContext(pageContext.getServletContext());
             SqlSessionTemplate sqlSession = (SqlSessionTemplate) ctx.getBean("sqlSession");
 
-            TWorkpieceMapper workpieceMapper = sqlSession.getMapper(TWorkpieceMapper.class);
-            String[] split = this.workpieceno.split(",");
+            TToolMapper toolMapper = sqlSession.getMapper(TToolMapper.class);
+            String[] split = this.toolno.split(",");
             sb = new StringBuffer();
             for(int i = 0 ;i< split.length ;i++){
-                TWorkpiece workpiece = workpieceMapper.selectByPrimaryKey(split[i]);
-                if(workpiece != null){
+                TTool tool = toolMapper.selectByPrimaryKey(split[i]);
+                if(tool != null){
                     if(i < split.length-1){
-                        sb.append(workpiece.getWorkpieceName() +",");
+                        sb.append(tool.getToolName() +",");
                     }else{
-                        sb.append(workpiece.getWorkpieceName());
+                        sb.append(tool.getToolName());
                     }
                 }
             }
@@ -84,7 +84,8 @@ public class SysWorkpieceNameTag extends BodyTagSupport {
     public void release() {
 
         super.release();
-        workpieceno = null;
+        toolno = null;
 
     }
-}
+
+    }

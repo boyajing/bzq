@@ -1152,6 +1152,66 @@ public class TProjectTflowExample {
             addCriterion("WORKPIECE not between", value1, value2, "workpiece");
             return (Criteria) this;
         }
+
+        public Criteria andActAmtIsNull() {
+            addCriterion("ACT_AMT is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtIsNotNull() {
+            addCriterion("ACT_AMT is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtEqualTo(BigDecimal value) {
+            addCriterion("ACT_AMT =", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtNotEqualTo(BigDecimal value) {
+            addCriterion("ACT_AMT <>", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtGreaterThan(BigDecimal value) {
+            addCriterion("ACT_AMT >", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtGreaterThanOrEqualTo(BigDecimal value) {
+            addCriterion("ACT_AMT >=", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtLessThan(BigDecimal value) {
+            addCriterion("ACT_AMT <", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtLessThanOrEqualTo(BigDecimal value) {
+            addCriterion("ACT_AMT <=", value, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtIn(List<BigDecimal> values) {
+            addCriterion("ACT_AMT in", values, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtNotIn(List<BigDecimal> values) {
+            addCriterion("ACT_AMT not in", values, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("ACT_AMT between", value1, value2, "actAmt");
+            return (Criteria) this;
+        }
+
+        public Criteria andActAmtNotBetween(BigDecimal value1, BigDecimal value2) {
+            addCriterion("ACT_AMT not between", value1, value2, "actAmt");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

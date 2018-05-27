@@ -105,7 +105,7 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/project/updateProject?projectNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/project/details?projectNo="+id, "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
 
         }
     </script>
@@ -133,9 +133,6 @@
         </div>
     </form>
     <div class="row-fluid">
-        <button type="button" onClick="create()">新增</button>
-        <button type="button" onClick="editProject()">修改</button>
-        <button type="button" onClick="del()">删除</button>
         <button type="button" onClick="elastic('queryframe')">查询条件</button>
         <button type="button" onclick="query()">查询提交</button>
         <button type="button" onclick="upFile()">管理文件</button>
@@ -152,10 +149,11 @@
                 <th rowspan="1">合同名称</th>
                 <th rowspan="1">合作商</th>
                 <th rowspan="1">开始日期</th>
-                <th rowspan="1">合同金额</th>
-                <th rowspan="1">合同状态</th>
+                <th rowspan="1">结束日期</th>
+                <th rowspan="1">合同实收金额</th>
                 <th rowspan="1">录入人</th>
                 <th rowspan="1">录入日期</th>
+                <th rowspan="1">合同状态</th>
             </tr>
             </thead>
             <tbody>
@@ -166,10 +164,12 @@
                     <td><a onclick="detailC('${item.projectNo}')">${item.projectName}</a></td>
                     <td><nt:cusname cuscomerid="${item.customerNo}"></nt:cusname></td>
                     <td><fmt:formatDate value="${item.beginDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
-                    <td><fmt:formatNumber value="${item.totalPrice}" pattern="#,#00.00"></fmt:formatNumber> </td>
-                    <td><nt:codeValue index="${item.status}" ctype="007"></nt:codeValue></td>
+                    <td><fmt:formatDate value="${item.endDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
+                    <td><fmt:formatNumber value="${item.actAmt}" pattern="#,#00.00"></fmt:formatNumber> </td>
+
                     <td>${item.applyOpr}</td>
                     <td><fmt:formatDate value="${item.applyDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
+                    <td><nt:codeValue index="${item.status}" ctype="007"></nt:codeValue></td>
                 </tr>
             </c:forEach>
             </tbody>

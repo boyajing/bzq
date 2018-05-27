@@ -103,4 +103,10 @@ public interface TSalaryMapper {
      * @mbg.generated Tue May 15 21:38:24 CST 2018
      */
     int updateByPrimaryKey(TSalary record);
+
+    TSalary sumSalaryByMonth(@Param(value = "userId") String userId, @Param(value = "date")String date);
+
+    void updateSalaryByMonth(String userId, String date);
+
+    void updateByExampleMonth(@Param("record") TSalary salary, @Param("example") TSalaryExample example, @Param(value = "date") String date);
 }

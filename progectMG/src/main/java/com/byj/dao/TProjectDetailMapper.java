@@ -105,4 +105,6 @@ public interface TProjectDetailMapper {
     int updateByPrimaryKey(TProjectDetail record);
 
     TProjectDetail sumByWorkpiece(String workpieceNo);
+
+    TProjectDetail sumByProject(String projectNo);
 }

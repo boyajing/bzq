@@ -248,28 +248,28 @@
             var id=$("#detailCount").val();
             var str = "<tr name='detailtr' id='detailtr"+id+"'>"+
                 "<td width='16%'>"+
-                    "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"workpiecename' value=''/>"+
-                    "<input type='hidden'  id='"+id+"workpieceno' name='details["+id+"].workpieceNo' value=''/>"+
-                    "<button class='btn' InputHide='1' type='button' onclick='selectWP("+id+")'>选择</button>"+
+                "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"workpiecename' value=''/>"+
+                "<input type='hidden'  id='"+id+"workpieceno' name='details["+id+"].workpieceNo' value=''/>"+
+                "<button class='btn' InputHide='1' type='button' onclick='selectT("+id+")'>选择</button>"+
                 "</td>"+
                 "<td width='8%'>"+
-                    "<select class='input-block-level' name='details["+id+"].unit' id='"+id+"unit'>"+
-                    "<option value=''>请选择</option>"+
-                    "<nt:code ctype='003'></nt:code>"+
-                    "</select>"+
+                "<select class='input-block-level' name='details["+id+"].unit' id='"+id+"unit'>"+
+                "<option value=''>请选择</option>"+
+                "<nt:code ctype='003'></nt:code>"+
+                "</select>"+
                 "</td>"+
                 "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].unitPrice'  id='"+id+"unitPrice' onblur='calcuteToTal()' onfocus='rmoney(this)' value=''/></td>"+
                 "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].quantity'  id='"+id+"quantity' value='' onblur='calcuteToTal()'/></td>"+
                 "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].totalPrice'  id='"+id+"totalPrice' value=''/></td>"+
                 "<td width='8%'>"+
-                    "<select class='input-block-level' name='details["+id+"].processType' id='"+id+"processType'>"+
-                    "<option value=''>请选择</option>"+
-                    "<nt:code ctype='006'></nt:code>"+
-                    "</select>"+
+                "<select class='input-block-level' name='details["+id+"].processType' id='"+id+"processType'>"+
+                "<option value=''>请选择</option>"+
+                "<nt:code ctype='006'></nt:code>"+
+                "</select>"+
                 "</td>"+
                 "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].remark'  id='"+id+"remark' value=''/></td>"+
                 "<td width='5%'><button class='btn' type='button' onclick='deleteD("+id+")'>删除</button></td>"+
-            "</tr>";
+                "</tr>";
             $("#btable").append(str);
             id=parseInt(id);
             $("#detailCount").val(id+1);
@@ -279,12 +279,12 @@
             $("#"+trid).remove();
             calcuteToTal();
         }
-        function selectWP(detailTr) {
-            window.open("<%=path%>/workpiece/index?select=1&detailTr="+detailTr, "选择工件", "menubar=no,status=no,resizable=no,scrollbars=1,width=1000,height=800pt,top=100,left=100");
+        function selectT(detailTr) {
+            window.open("<%=path%>/tool/index?select=1&detailTr="+detailTr, "选择工具", "menubar=no,status=no,resizable=no,scrollbars=1,width=1000,height=800pt,top=100,left=100");
         }
-        function chooceWorkpiece(WPno,WPname,detailTr) {
-            $("#"+detailTr+"workpiecename").val(WPname);
-            $("#"+detailTr+"workpieceno").val(WPno);
+        function chooceTool(Tno,Tname,detailTr) {
+            $("#"+detailTr+"toolname").val(Tname);
+            $("#"+detailTr+"toolno").val(Tno);
         }
         function calcuteToTal(){
             var totalQuantity=0;
@@ -325,68 +325,17 @@
     <div style="height:10px"></div>
     <div>
         <form id="expendForm" method="post">
-            <input type="hidden" name="edit" value="${edit}" >
             <table id="atable">
+                <input type="hidden" id="detailCount" value="0">
                 <tr>
-                    <td colspan="4"><h4>合同基本信息</h4></td>
+                    <td colspan="8"><h5>材料费支出</h5></td>
                 </tr>
                 <tr>
-                    <td>合同编号</td>
-                    <td>
-                        <input readonly type="text" value="${project.projectNo}"/>
-                        <input type="hidden" name="project.projectNo" id="projectNo" value="${project.projectNo}"/>
-                    </td>
-                    <td>合作商</td>
-                    <td>
-                        <input InputSize="1" type="text" readonly id="customerName" value="<nt:cusname cuscomerid="${project.customerNo}"></nt:cusname>"/>
-                        <input type="hidden" id="customerNo" name="project.customerNo" value="${project.customerNo}"/>
-                        <button InputHide="1" type="button" onclick="selectC()" id="selectCustomer" >选择</button>
-                    </td>
-                </tr>
-                <tr>
-                    <td>总数量</td>
-                    <td><input readonly type="text" id="quantity" name="project.quantity" value="${project.quantity}" ></td>
-                    <td>总金额</td>
-                    <td><input readonly type="text" money="money" id="totalPrice" name="project.totalPrice" value="<fmt:formatNumber type='number' value='${project.totalPrice}' pattern='#,##0.00'/>" ></td>
-                </tr>
-                <tr>
-                    <td>开始日期</td>
-                    <td><input type="text" id="pBgdate" name="project.beginDate" value="<fmt:formatDate value='${project.beginDate}' pattern='yyyy-MM-dd'/>" onchange="stend(this);"/></td>
-                    <td>结束日期</td>
-                    <td><input type="text" id="pEddate" name="project.endDate" value="<fmt:formatDate value='${project.endDate}' pattern='yyyy-MM-dd'/>" onchange="stend(this);"/></td>
-                </tr>
-                <tr>
-                    <td>预期天数</td>
-                    <td><input readonly type="text" id="days" value="" ></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td>备注</td>
-                    <td colspan="3"><textarea cols="10" name="project.remark">${project.remark}</textarea> </td>
-                </tr>
-                <tr>
-                    <td>录入人</td>
-                    <td>${project.applyOpr}</td>
-                    <td>录入日期</td>
-                    <td><fmt:formatDate value="${project.applyDate}" pattern="yyyy-MM-dd" ></fmt:formatDate></td>
-                </tr>
-            </table>
-            <table id="btable">
-                <input type="hidden" id="detailCount" value="${fn:length(details)}">
-                <tr>
-                    <td colspan="8"><h5>合同明细</h5></td>
-                </tr>
-                <tr>
-                    <td width="16%">工件</td>
+                    <td width="16%">工具</td>
                     <td width="8%">单位</td>
                     <td width="8%">单价</td>
                     <td width="8%">数量</td>
                     <td width="8%">总价</td>
-                    <td width="8%">加工类型</td>
-                    <%--<td>开始日期</td>--%>
-                    <%--gggg<td>结束日期</td>--%>
-                    <%--<td>天数</td>--%>
                     <td width="8%">备注</td>
                     <td width="5%"><button type="button" onclick="addDetail();">添加</button></td>
                 </tr>
@@ -394,25 +343,16 @@
                     <tr name="detailtr" id="detailtr${status.count-1}">
                         <td>
                             <input type="hidden" name="details[${status.count-1}].id" value="${detail.id}">
-                            <input InputSize="1" readonly type="text" id="${status.count-1}workpiecename" value="<nt:workpiecename workpieceno="${detail.workpieceNo}"></nt:workpiecename>" />
-                            <input type="hidden"  id="${status.count-1}workpieceno" name="details[${status.count-1}].workpieceNo" value="${detail.workpieceNo}"/>
-                            <button InputHide="1" id="${status.count-1}select" type="button" onclick="selectWP('${status.count-1}')">选择</button>
+                            <input InputSize="1" readonly type="text" id="${status.count-1}toolname" value="<nt:toolname toolno="${detail.toolNo}"></nt:toolname>" />
+                            <input type="hidden"  id="${status.count-1}toolno" name="details[${status.count-1}].toolNo" value="${detail.toolNo}"/>
+                            <button InputHide="1" id="${status.count-1}select" type="button" onclick="selectT('${status.count-1}')">选择</button>
                         </td>
                         <td>
-                            <select name="details[${status.count-1}].unit" id="${status.count-1}unit">
-                                <option value="">请选择</option>
-                                <nt:code index="${detail.unit}" ctype="003"></nt:code>
-                            </select>
+
                         </td>
                         <td><input type="text" money="money" name="details[${status.count-1}].unitPrice"  id="${status.count-1}unitPrice" onblur="calcuteToTal()" onfocus="rmoney(this)" value="<fmt:formatNumber type='number' value='${detail.unitPrice}' pattern='#,##0.00'/>"/></td>
                         <td><input type="text" name="details[${status.count-1}].quantity"  id="${status.count-1}quantity" value="${detail.quantity}" onblur="calcuteToTal()"/></td>
                         <td><input type="text" money="money" name="details[${status.count-1}].totalPrice"  id="${status.count-1}totalPrice" value="<fmt:formatNumber type='number' value='${detail.totalPrice}' pattern='#,##0.00'/>"/></td>
-                        <td>
-                            <select name="details[${status.count-1}].processType" id="${status.count-1}processType">
-                                <option value="">请选择</option>
-                                <nt:code index="${detail.processType}" ctype="006"></nt:code>
-                            </select>
-                        </td>
                         <td><input type="text" name="details[${status.count-1}].remark"  id="${status.count-1}remark" value="${detail.remark}"/></td>
                         <td><button type="button" onclick="deleteD('${status.count-1}')">删除</button></td>
                     </tr>

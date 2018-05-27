@@ -30,14 +30,14 @@
 
         });
         function create(){
-            location.href='<%=path%>/tool/createTool';
+            location.href='<%=path%>/salary/recordSalary';
         }
         function editCustmor(){
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
                 var custmorNo=temp.val();
-                window.location.href = "<%=path%>/tool/updateTool?toolNo="+custmorNo;
+                window.location.href = "<%=path%>/customer/updateCustomer?customerNo="+custmorNo;
             } else {
                 myAlert("温馨提示","请选中一条记录");
             }
@@ -54,11 +54,11 @@
         function deleteCustmor(){
             var cusNo = $("input[name='checkboxs']:checked").val();
             $.ajax({
-                url:'<%=path%>/tool/beforeDelete?toolNo='+cusNo,
+                url:'<%=path%>/customer/countProjectByCustomer?customerNo='+cusNo,
                 type: "GET",
                 success:function(data){
                     if(data>0){
-                        myAlert("温馨提示","此工具库存不为0，不能删除！");
+                        myAlert("温馨提示","此合作商下有合同，不能删除！");
                     }else{
                         deleteCus();
 
@@ -68,9 +68,9 @@
         }
         function deleteCus(){
             var cusNo = $("input[name='checkboxs']:checked").val();
-            <%--window.location.href = "<%=path%>/tool/delete?pi=${pi}&toolNo="+cusNo;--%>
+            <%--window.location.href = "<%=path%>/customer/delete?pi=${pi}&customerNo="+cusNo;--%>
             $.ajax({
-                url:'<%=path%>/tool/delete?toolNo='+cusNo,
+                url:'<%=path%>/customer/delete?customerNo='+cusNo,
                 type: "GET",
                 success:function(data){
                     if(data>0){
@@ -83,10 +83,10 @@
         }
 
         function back() {
-            window.location.href="<%=path%>/tool/index";
+            window.location.href="<%=path%>/customer/index";
         }
         function query(){
-            $("#queryForm").attr("action", "<%=path%>/tool/index").submit();
+            $("#queryForm").attr("action", "<%=path%>/customer/index").submit();
         }
         function xgsc(){
             //var a = window.parent.isShow();
@@ -96,7 +96,7 @@
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
-                var businessId=temp.val();
+                var businessId=temp.val().split("&&")[0];
                 //window.location.href = "<%=path%>/fileManager/upFile?businessId="+businessId+"&businessType=file_01";
                 window.open("<%=path%>/fileManager/upFile?businessId="+businessId+"&businessType=file_01", "上传文件", "menubar=no,status=no,resizable=no,scrollbars=1,width=1200,height=1000pt,top=100,left=100");
             } else {
@@ -105,12 +105,12 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/tool/updateTool?toolNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/customer/updateCustomer?customerNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
-        function chooseT() {
+        function chooseC() {
             var temp = $("input[name='checkboxs']:checked");
             var businessId=temp.val();
-            opener.chooceWorkpiece(businessId.split("&&")[0],businessId.split("&&")[1],${detailTr});
+            opener.chooceCustomer(businessId.split("&&")[0],businessId.split("&&")[1]);
             window.close();
         }
     </script>
@@ -140,57 +140,63 @@
     <div class="row-fluid">
         <button type="button" onClick="elastic('queryframe')">查询条件</button>
         <button type="button" onclick="query()">查询提交</button>
-        <c:if test="${empty select}">
-            <button type="button" onClick="create()">新增</button>
-            <button type="button" onClick="editCustmor()">修改</button>
-            <button type="button" onClick="del()">删除</button>
-        </c:if>
-        <c:if test="${select==1}">
-            <button type="button" onclick="chooseWP()">选择</button>
-        </c:if>
-        <c:if test="${empty select}">
-            <button type="button" onclick="upFile()">管理文件</button>
-        </c:if>
+        <button type="button" onClick="create()">记工</button>
+        <button type="button" onclick="upFile()">管理文件</button>
+
         <span style="  display: inline-block;float: right"><b>金额单位：元</b></span>
     </div>
 
     <div style="height:10px"></div>
     <div class="row-fluid">
-        <table id="resultTab" class="table table-bordered table-condensed table-striped table-hover">
-            <thead>
-            <tr>
-                <th rowspan="1"></th>
-                <th rowspan="1">工具编号</th>
-                <th rowspan="1">工具名称</th>
-                <th rowspan="1">单位</th>
-                <th rowspan="1">库存</th>
-                <th rowspan="1">历史购入个数</th>
-                <th rowspan="1">消耗总金额</th>
-                <th rowspan="1">录入人</th>
-                <th rowspan="1">录入日期</th>
-            </tr>
-            </thead>
-            <tbody>
-            <c:forEach var="item" items="${list}">
+        <c:forEach items="${users}" var="user">
+            <table id="resultTab" class="table table-bordered table-condensed table-striped table-hover">
+                <thead>
                 <tr>
-                    <td><input rec="true" type="radio" name="checkboxs" value="${item.toolNo}&&${item.toolName}"></td>
-                    <td>${item.toolNo}</td>
-                    <td><a onclick="detailC('${item.toolNo}')">${item.toolName}</a></td>
-                    <td>
-                        <c:if test="${empty item.unit}">--</c:if>
-                        <c:if test="${not empty item.unit}"><nt:codeValue index="${item.unit}" ctype="003"></nt:codeValue></c:if>
-                    </td>
-                    <td><c:if test="${empty item.stock}">--</c:if><c:if test="${not empty item.stock}">${item.stock}</c:if></td>
-                    <td><c:if test="${empty item.hisCount}">--</c:if><c:if test="${not empty item.hisCount}">${item.hisCount}</c:if></td>
-                    <td><c:if test="${empty item.hisAmt}">--</c:if><c:if test="${not empty item.hisAmt}"><fmt:formatNumber value="${item.hisAmt}" pattern='#,##0.00'></fmt:formatNumber></c:if></td>
-                    <td>${item.applyOpr}</td>
-                    <td><fmt:formatDate value="${item.applyDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
+                    <th colspan="${fn:length(user.salaryList)+1}"><nt:username userid="${user.userId}"></nt:username></th>
                 </tr>
-            </c:forEach>
-            </tbody>
-        </table>
+                <tr>
+                    <th rowspan="1"><fmt:formatDate value="${today}" pattern="yyyy-MM" ></fmt:formatDate></th>
+                    <c:forEach items="${user.salaryList}" var="salary">
+                        <th rowspan="1"><fmt:formatDate value="${salary.salaryDate}" pattern="dd" ></fmt:formatDate></th>
+                    </c:forEach>
+                </tr>
+                <tr>
+                    <th rowspan="1">时</th>
+                    <c:forEach items="${user.salaryList}" var="salary">
+                        <td rowspan="1">
+                        <c:if test="${empty salary.manHour}">--</c:if>
+                        <c:if test="${not empty salary.manHour}">${salary.manHour}</td>
+                        </c:if>
+                    </c:forEach>
+                </tr>
+                <tr>
+                    <th rowspan="1">元/时</th>
+                    <c:forEach items="${user.salaryList}" var="salary">
+                        <td rowspan="1">
+                            <c:if test="${empty salary.unitSalary}">--</c:if>
+                            <c:if test="${not empty salary.unitSalary}">
+                                <fmt:formatNumber value="${salary.unitSalary}" pattern="##,#00.00" ></fmt:formatNumber></td>
+                            </c:if>
+                        </td>
+                    </c:forEach>
+                </tr>
+                <tr>
+                    <th rowspan="1">工资</th>
+                    <c:forEach items="${user.salaryList}" var="salary">
+                        <td rowspan="1">
+                        <c:if test="${empty salary.salary}">--</c:if>
+                        <c:if test="${not empty salary.salary}">
+                            <fmt:formatNumber value="${salary.salary}" pattern="##,#00.00" ></fmt:formatNumber></td>
+                        </c:if>
+                    </c:forEach>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </c:forEach>
     </div>
-    <%@ include file="../../mypage.jsp" %>
+    <%--<%@ include file="../mypage.jsp" %>--%>
     <script src="<%=path%>/js/bootstrap/js/bootstrap.js"></script>
 </div>
 </body>

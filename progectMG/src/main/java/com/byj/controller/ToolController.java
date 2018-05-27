@@ -44,13 +44,16 @@ public class ToolController extends JedaController {
     public ModelAndView index(TTool tool, @RequestParam(value = "pi", required = true, defaultValue = "-1") int pageIndex,
                               @RequestParam(value = "o", required = true, defaultValue = "TOOL_NO desc") String order,
                               ModelAndView mv, HttpServletRequest request, HttpServletResponse response,
-                              JedaUser currentUser)throws Exception{
+                              JedaUser currentUser,String select,String detailTr)throws Exception{
         try {
             mv=businessOperationQuery(tool,request,pageIndex,order,pageSize,mv,currentUser);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        if(null!=select && "1".equals(select)){
+            mv.addObject("select",select);
+            mv.addObject("detailTr",detailTr);
+        }
         mv.setViewName("resource/tool/index");
         mv.addObject("pi",pageIndex);
         return mv;

@@ -22,10 +22,6 @@
     <script type="text/javascript" src="<%=path%>/js/date/jquery.ui.js"></script>
     <script type="text/javascript" src="<%=path%>/js/info/msgbox.js"></script>
     <script type="text/javascript" src="<%=path%>/js/date/datecontroller.js"></script>
-    <style type="text/css">
-        #bg{display: none; position: absolute; top: 0%; left: 0%; width: 100%; height: 100%; background-color: black; z-index:1001; -moz-opacity: 0.7; opacity:.70; filter: alpha(opacity=70);}
-        #show{display: none; position: absolute; top: 25%; left: 25%; width: 50%; height: 55%; padding: 8px; border: 1px solid #E8E9F7; background-color: white; z-index:1002; overflow: auto;border-radius:25px;}
-    </style>
     <script type="text/javascript">
         $(function () {
             if(${msg!=null}){
@@ -34,14 +30,14 @@
 
         });
         function create(){
-            location.href='<%=path%>/project/createProject';
+            location.href='<%=path%>/expense/expenseTool';
         }
-        function editProject(){
+        function editCustmor(){
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
                 var custmorNo=temp.val();
-                window.location.href = "<%=path%>/project/updateProject?projectNo="+custmorNo;
+                window.location.href = "<%=path%>/customer/updateCustomer?customerNo="+custmorNo;
             } else {
                 myAlert("温馨提示","请选中一条记录");
             }
@@ -49,17 +45,32 @@
         function del(){
             var temp = $("input[name='checkboxs']:checked");
             if(temp.length == 1){
-                myConfirm("温馨提示","确认要删除这条记录吗？",deleteProject);
+                myConfirm("温馨提示","确认要删除这条记录吗？",deleteCustmor);
             }else{
                 myAlert("温馨提示","请选中一条记录！");
                 return;
             }
         }
-        function deleteProject(){
+        function deleteCustmor(){
             var cusNo = $("input[name='checkboxs']:checked").val();
-            <%--window.location.href = "<%=path%>/project/delete?pi=${pi}&projectNo="+cusNo;--%>
             $.ajax({
-                url:'<%=path%>/project/delete?projectNo='+cusNo,
+                url:'<%=path%>/customer/countProjectByCustomer?customerNo='+cusNo,
+                type: "GET",
+                success:function(data){
+                    if(data>0){
+                        myAlert("温馨提示","此合作商下有合同，不能删除！");
+                    }else{
+                        deleteCus();
+
+                    }
+                }
+            });
+        }
+        function deleteCus(){
+            var cusNo = $("input[name='checkboxs']:checked").val();
+            <%--window.location.href = "<%=path%>/customer/delete?pi=${pi}&customerNo="+cusNo;--%>
+            $.ajax({
+                url:'<%=path%>/customer/delete?customerNo='+cusNo,
                 type: "GET",
                 success:function(data){
                     if(data>0){
@@ -72,10 +83,10 @@
         }
 
         function back() {
-            window.location.href="<%=path%>/project/index?time=${time}";
+            window.location.href="<%=path%>/customer/index";
         }
         function query(){
-            $("#queryForm").attr("action", "<%=path%>/project/index?time=${time}").submit();
+            $("#queryForm").attr("action", "<%=path%>/customer/index").submit();
         }
         function xgsc(){
             //var a = window.parent.isShow();
@@ -85,7 +96,7 @@
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
-                var businessId=temp.val();
+                var businessId=temp.val().split("&&")[0];
                 //window.location.href = "<%=path%>/fileManager/upFile?businessId="+businessId+"&businessType=file_01";
                 window.open("<%=path%>/fileManager/upFile?businessId="+businessId+"&businessType=file_01", "上传文件", "menubar=no,status=no,resizable=no,scrollbars=1,width=1200,height=1000pt,top=100,left=100");
             } else {
@@ -94,44 +105,13 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/project/updateProject?projectNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/customer/updateCustomer?customerNo="+id+"&edit=2", "frame", "height=1200,width=1900,top=100,left=300,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
-        function startProject(){
+        function chooseC() {
             var temp = $("input[name='checkboxs']:checked");
-            if (temp.length == 1) {
-                showdiv();
-            } else {
-                myAlert("温馨提示","请选中一条记录！");
-                return ;
-            }
-        }
-        function showdiv() {
-            document.getElementById("bg").style.display ="block";
-            document.getElementById("show").style.display ="block";
-        }
-        function hidediv() {
-            document.getElementById("bg").style.display ='none';
-            document.getElementById("show").style.display ='none';
-        }
-        function hiddenSubmit(){
-            var temp = $("input[name='checkboxs']:checked").val().split("&&");
-            $.ajax({
-                url:'<%=path%>/project/startProject?projectNo='+temp[0],
-                data:$("#hiddenForm").serializeArray(),
-                dataType:"json",
-                contentType:"application/x-www-form-urlencoded",
-                type:'post',
-                success:function(data){
-                    if(data>0){
-                        myAlert("温馨提示：","合同开始成功！",back);
-                    }else{
-                        myAlert("温馨提示：","合同开始失败！",back);
-                    }
-                },
-                error:function () {
-                    alert("生成失败！");
-                }
-            });
+            var businessId=temp.val();
+            opener.chooceCustomer(businessId.split("&&")[0],businessId.split("&&")[1]);
+            window.close();
         }
     </script>
 </head>
@@ -161,9 +141,8 @@
         <button type="button" onClick="elastic('queryframe')">查询条件</button>
         <button type="button" onclick="query()">查询提交</button>
         <button type="button" onClick="create()">新增</button>
-        <button type="button" onClick="editProject()">修改</button>
+        <button type="button" onClick="editCustmor()">修改</button>
         <button type="button" onClick="del()">删除</button>
-        <button type="button" onClick="startProject()">开始合同</button>
         <button type="button" onclick="upFile()">管理文件</button>
         <span style="  display: inline-block;float: right"><b>金额单位：元</b></span>
     </div>
@@ -174,29 +153,26 @@
             <thead>
             <tr>
                 <th rowspan="1"></th>
-                <th rowspan="1">合同编号</th>
-                <th rowspan="1">合同名称</th>
-                <th rowspan="1">合作商</th>
-                <th rowspan="1">开始日期</th>
-                <th rowspan="1">合同金额</th>
+                <th rowspan="1">支出日期</th>
+                <th rowspan="1">工具名称</th>
+                <th rowspan="1">数量</th>
+                <th rowspan="1">单价</th>
+                <th rowspan="1">总价</th>
                 <th rowspan="1">录入人</th>
                 <th rowspan="1">录入日期</th>
-                <th rowspan="1">合同状态</th>
             </tr>
             </thead>
             <tbody>
             <c:forEach var="item" items="${list}">
                 <tr>
-                    <td><input rec="true" type="radio" name="checkboxs" value="${item.projectNo}"></td>
-                    <td>${item.projectNo}</td>
-                    <td><a onclick="detailC('${item.projectNo}')">${item.projectName}</a></td>
-                    <td><nt:cusname cuscomerid="${item.customerNo}"></nt:cusname></td>
-                    <td><fmt:formatDate value="${item.beginDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
-                    <td><fmt:formatNumber value="${item.totalPrice}" pattern="#,#00.00"></fmt:formatNumber> </td>
-
-                    <td>${item.applyOpr}</td>
+                    <td><input rec="true" type="radio" name="checkboxs" value="${item.id}"></td>
+                    <td><fmt:formatDate value="${item.expenseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></td>
+                    <td><nt:toolname toolno="${item.toolNo}"></nt:toolname></td>
+                    <td>${item.quantity}</td>
+                    <td><fmt:formatNumber value="${item.unitPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.totalPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><nt:username userid="${item.applyOpr}"></nt:username></td>
                     <td><fmt:formatDate value="${item.applyDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
-                    <td><nt:codeValue index="${item.status}" ctype="007"></nt:codeValue></td>
                 </tr>
             </c:forEach>
             </tbody>
@@ -204,24 +180,6 @@
     </div>
     <%@ include file="../../mypage.jsp" %>
     <script src="<%=path%>/js/bootstrap/js/bootstrap.js"></script>
-</div>
-<div id="bg"></div>
-<div id="show">
-    <form id="hiddenForm" method="post">
-        <table class="well table resultTable table-hover">
-            <input name="id" id="id" type="hidden" value=""/>
-            <input name="productNo" id="productNo" type="hidden" value=""/>
-            <div style="height:50px"></div>
-            <span style="font-size:18px">请选择合同开始日：</span>
-            <div style="height:20px"></div>
-            <tr><td>合同开始日：</td><td><input name="beginDate" id="bgdate" type="text" value="<fmt:formatDate value='${today}' pattern='yyyy-MM-dd'/>"/></td></tr>
-        </table>
-    </form>
-    <div style="height:20px"></div>
-    <div style="text-align:center">
-        <button type="button" onclick="hiddenSubmit()">确认</button>
-        <button type="button" id="btnclose" onclick="hidediv()">取消</button>
-    </div>
 </div>
 </body>
 </html>

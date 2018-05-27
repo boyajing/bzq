@@ -71,6 +71,16 @@
         </attribute>
     </tag>
     <tag>
+        <name>toolname</name>
+        <tagclass>com.nantian.utils.tag.SysToolNameTag</tagclass>
+        <bodycontent>JSP</bodycontent>
+        <attribute>
+            <name>toolno</name>
+            <required>true</required>
+            <rtexprvalue>true</rtexprvalue>
+        </attribute>
+    </tag>
+    <tag>
         <name>coursename</name>
         <tagclass>com.nantian.utils.tag.SysCourseNameTag</tagclass>
         <bodycontent>JSP</bodycontent>
