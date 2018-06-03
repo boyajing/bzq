@@ -33,4 +33,6 @@ public interface TExpenseDetailMapper {
     int updateByPrimaryKey(TExpenseDetail record);
 
     TExpenseDetail sumByTool(String toolNo);
+
+    TExpenseDetail selectMaxElec();
 }

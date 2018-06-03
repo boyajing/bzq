@@ -80,20 +80,16 @@
                 myAlert("温馨提示：","请添加至少一条支出！");
                 return;
             }
-            if($("input[id^='toolname']").val()==""){
-                myAlert("温馨提示：","请选择工具！");
+            if($("input[id$='expenseDate']").val()==""){
+                myAlert("温馨提示：","请填写支出日期！");
                 return;
             }
-            if($("select[id^='unit']").val()==""){
-                myAlert("温馨提示：","请选择工具单位！");
+            if($("input[id$='totalPrice']").val()==""){
+                myAlert("温馨提示：","请填写支出金额！");
                 return;
             }
-            if($("input[id^='unitPrice']").val()==""){
-                myAlert("温馨提示：","请填写工具单价！");
-                return;
-            }
-            if($("input[id^='quantity']").val()==""){
-                myAlert("温馨提示：","请填写工具数量！");
+            if($("input[id$='remark']").val()==""){
+                myAlert("温馨提示：","请填写支出内容！");
                 return;
             }
             $("input[money='money']").each(function(){
@@ -121,7 +117,7 @@
         }
         //返回取消
         function goBack() {
-            window.location.href = "<%=path%>/expense/indexTool";
+            window.location.href = "<%=path%>/expense/indexOther";
         }
         $(function(){
             var start = 1960; // 指定开始年份
@@ -236,22 +232,9 @@
             var id=$("#detailCount").val();
             var str = "<tr name='detailtr' id='detailtr"+id+"'>"+
                 "<td width='8%'>"+
-                    "<input type='text' name='details["+id+"].expenseDate'  id='"+id+"expensedate'  value=''/>"+
+                "<input type='text' name='details["+id+"].expenseDate'  id='"+id+"expensedate'  value=''/>"+
                 "</td>"+
-                "<td width='16%'>"+
-                "<input class='input-block-large' InputSize='1' readonly type='text' id='"+id+"toolname' value=''/>"+
-                "<input type='hidden'  id='"+id+"toolno' name='details["+id+"].toolNo' value=''/>"+
-                "<button class='btn' InputHide='1' type='button' onclick='selectT("+id+")'>选择</button>"+
-                "</td>"+
-                "<td width='8%'>"+
-                "<select class='input-block-level' name='details["+id+"].unit' id='"+id+"unit'>"+
-                "<option value=''>请选择</option>"+
-                "<nt:code ctype='003'></nt:code>"+
-                "</select>"+
-                "</td>"+
-                "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].unitPrice'  id='"+id+"unitPrice' onblur='calcuteToTal()' onfocus='rmoney(this)' value=''/></td>"+
-                "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].quantity'  id='"+id+"quantity' value='' onblur='calcuteToTal()'/></td>"+
-                "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].totalPrice'  id='"+id+"totalPrice' value=''/></td>"+
+                "<td width='8%'><input class='input-block-level' type='text' money='money' name='details["+id+"].totalPrice'  id='"+id+"totalPrice' value='' onfocus='rmoney(this)' onblur='fmoney(this)'/></td>"+
                 "<td width='8%'><input class='input-block-level' type='text' name='details["+id+"].remark'  id='"+id+"remark' value=''/></td>"+
                 "<td width='5%'><button class='btn' type='button' onclick='deleteD("+id+")'>删除</button></td>"+
                 "</tr>";
@@ -341,38 +324,21 @@
             <table id="atable">
                 <input type="hidden" id="detailCount" value="0">
                 <input type="hidden" name="edit" value="${edit}">
-                <input type="hidden" name="type" value="2">
+                <input type="hidden" name="type" value="4">
                 <tr>
                     <td colspan="8"><h5>材料费支出</h5></td>
                 </tr>
                 <tr>
                     <td width="8%">支出时间</td>
-                    <td width="16%">工具</td>
-                    <td width="8%">单位</td>
-                    <td width="8%">单价</td>
-                    <td width="8%">数量</td>
-                    <td width="8%">总价</td>
-                    <td width="8%">备注</td>
+                    <td width="8%">支出金额</td>
+                    <td width="8%">支出内容</td>
                     <td width="5%"><button type="button" onclick="addDetail();">添加</button></td>
                 </tr>
                 <c:forEach var="detail" items="${details}" varStatus="status">
                     <tr name="detailtr" id="detailtr${status.count-1}">
                         <td><input type="text" name="details[${status.count-1}].expenseDate"  id="${status.count-1}expensedate"  value="<fmt:formatDate value='${detail.expenseDate}' pattern='yyyy-MM-dd'/>"/></td>
-                        <td>
-                            <input type="hidden" name="details[${status.count-1}].id" value="${detail.id}">
-                            <input InputSize="1" readonly type="text" id="${status.count-1}toolname" value="<nt:toolname toolno="${detail.toolNo}"></nt:toolname>" />
-                            <input type="hidden"  id="${status.count-1}toolno" name="details[${status.count-1}].toolNo" value="${detail.toolNo}"/>
-                            <button InputHide="1" id="${status.count-1}select" type="button" onclick="selectT('${status.count-1}')">选择</button>
-                        </td>
-                        <td>
-                            <select class='input-block-level' name='details[${status.count-1}].unit' id='"+id+"unit'>
-                                <option value=''>请选择</option>
-                                <nt:code ctype='003'></nt:code>
-                            </select>
-                        </td>
-                        <td><input type="text" money="money" name="details[${status.count-1}].unitPrice"  id="${status.count-1}unitPrice" onblur="calcuteToTal()" onfocus="rmoney(this)" value="<fmt:formatNumber type='number' value='${detail.unitPrice}' pattern='#,##0.00'/>"/></td>
-                        <td><input type="text" name="details[${status.count-1}].quantity"  id="${status.count-1}quantity" value="${detail.quantity}" onblur="calcuteToTal()"/></td>
-                        <td><input type="text" money="money" name="details[${status.count-1}].totalPrice"  id="${status.count-1}totalPrice" value="<fmt:formatNumber type='number' value='${detail.totalPrice}' pattern='#,##0.00'/>"/></td>
+                        <input type="hidden" name="details[${status.count-1}].id" value="${detail.id}">
+                        <td><input type="text" money="money" name="details[${status.count-1}].totalPrice"  id="${status.count-1}totalPrice" value="<fmt:formatNumber type='number' value='${detail.totalPrice}' pattern='#,##0.00'/>" onfocus="rmoney(this)" onblur="fmoney(this)"/></td>
                         <td><input type="text" name="details[${status.count-1}].remark"  id="${status.count-1}remark" value="${detail.remark}"/></td>
                         <td><button type="button" onclick="deleteD('${status.count-1}')">删除</button></td>
                     </tr>

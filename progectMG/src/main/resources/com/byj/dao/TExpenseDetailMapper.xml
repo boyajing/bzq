@@ -416,4 +416,7 @@
     select sum(t.quantity) quantity,sum(t.total_price) total_price from t_expense_detail t
     where t.expense_type='2' and t.is_valid='0' and t.tool_no=#{toolNo,jdbcType=VARCHAR}
   </select>
+  <select id="selectMaxElec" resultMap="BaseResultMap">
+    select * from  t_expense_detail t where t.id=(select max(d.id) from t_expense_detail d where t.expense_type='1' and t.is_valid='0')
+  </select>
 </mapper>

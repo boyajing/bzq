@@ -30,14 +30,24 @@
 
         });
         function create(){
-            location.href='<%=path%>/expense/expenseTool';
+            location.href='<%=path%>/expense/expenseElec';
         }
         function editCustmor(){
             var temp = $("input[name='checkboxs']:checked");
 
             if (temp.length == 1) {
                 var id=temp.val();
-                window.location.href = "<%=path%>/expense/expenseTool?edit=1&id="+id;
+                $.ajax({
+                    url:'<%=path%>/expense/beforeEditElec?id='+id,
+                    type: "GET",
+                    success:function(data){
+                        if(data>0){
+                            myAlert("温馨提示","此记录不是最新的，不能修改！",back);
+                        }else{
+                            window.location.href = "<%=path%>/expense/expenseElec?edit=1&id="+id;
+                        }
+                    }
+                });
             } else {
                 myAlert("温馨提示","请选中一条记录");
             }
@@ -52,23 +62,38 @@
             }
         }
         function deleteT(){
-            var id = $("input[name='checkboxs']:checked").val();
-            <%--window.location.href = "<%=path%>/customer/delete?pi=${pi}&customerNo="+cusNo;--%>
+            var temp = $("input[name='checkboxs']:checked");
+            var id=temp.val();
             $.ajax({
-                url:'<%=path%>/expense/delete?id='+id,
+                url:'<%=path%>/expense/beforeEditElec?id='+id,
+                type: "GET",
+                success:function(data){
+                    if(data>0){
+                        myAlert("温馨提示","此记录不是最新的，不能删除！",back);
+                    }else{
+                        deleteElec();
+                    }
+                }
+            });
+        }
+        function deleteElec(){
+            var temp = $("input[name='checkboxs']:checked");
+            var id=temp.val();
+            $.ajax({
+                url:'<%=path%>/expense/deleteElec?id='+id,
                 type: "GET",
                 success:function(data){
                     if(data>0){
                         myAlert("温馨提示","删除成功！",back);
                     }else{
-                        myAlert("温馨提示","删除失败！",back);
+                        myAlert("温馨提示","删除失败！");
                     }
                 }
             });
         }
 
         function back() {
-            window.location.href="<%=path%>/expense/indexTool";
+            window.location.href="<%=path%>/expense/indexElec";
         }
         function query(){
             $("#queryForm").attr("action", "<%=path%>/customer/index").submit();
@@ -90,7 +115,7 @@
             }
         }
         function detailC(id) {
-            window.open("<%=path%>/expense/expenseTool?id="+id+"&edit=2", "frame", "height=600,width=1000,top=100,left=200,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
+            window.open("<%=path%>/expense/expenseElec?id="+id+"&edit=2", "frame", "height=600,width=1000,top=100,left=200,toolbar=no,menubar=no,scrollbars=no, resizable=1,location=no, status=no");
         }
         function chooseC() {
             var temp = $("input[name='checkboxs']:checked");
@@ -139,11 +164,15 @@
             <tr>
                 <th rowspan="1"></th>
                 <th rowspan="1">支出日期</th>
-                <th rowspan="1">工具名称</th>
-                <th rowspan="1">单位</th>
-                <th rowspan="1">数量</th>
-                <th rowspan="1">单价</th>
-                <th rowspan="1">总价</th>
+                <%--<th rowspan="1">电费类型</th>--%>
+                <th rowspan="1">总电表数</th>
+                <th rowspan="1">宏博电表数</th>
+                <th rowspan="1">永辰用电量</th>
+                <th rowspan="1">宏博用电量</th>
+                <th rowspan="1">总电量</th>
+                <th rowspan="1">元/度</th>
+                <th rowspan="1">永辰电费</th>
+                <th rowspan="1">宏博电费</th>
                 <th rowspan="1">录入人</th>
                 <th rowspan="1">录入日期</th>
             </tr>
@@ -153,11 +182,15 @@
                 <tr>
                     <td><input rec="true" type="radio" name="checkboxs" value="${item.id}"></td>
                     <td><a onclick="detailC('${item.id}')"><fmt:formatDate value="${item.expenseDate}" pattern="yyyy-MM-dd"></fmt:formatDate></a></td>
-                    <td><nt:toolname toolno="${item.toolNo}"></nt:toolname></td>
-                    <td><nt:codeValue index="${item.unit}" ctype="003"></nt:codeValue></td>
-                    <td>${item.quantity}</td>
-                    <td><fmt:formatNumber value="${item.unitPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
-                    <td><fmt:formatNumber value="${item.totalPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <%--<td><nt:codeValue index="${item.electricType}" ctype="005"></nt:codeValue></td>--%>
+                    <td><fmt:formatNumber value="${item.ammeterTotal}" pattern="##,#00.00"></fmt:formatNumber></td>
+                    <td><fmt:formatNumber value="${item.ammeterHb}" pattern="##,#00.00"></fmt:formatNumber></td>
+                    <td><fmt:formatNumber value="${item.YCquantity}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.HBquantity}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.YCquantity+item.HBquantity}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.unitPrice}" pattern="##,#00.000000"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.YCtotalPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
+                    <td><fmt:formatNumber value="${item.HBtotalPrice}" pattern="##,#00.00"></fmt:formatNumber> </td>
                     <td><nt:username userid="${item.applyOpr}"></nt:username></td>
                     <td><fmt:formatDate value="${item.applyDate}" pattern="yyyy-MM-dd"></fmt:formatDate> </td>
                 </tr>

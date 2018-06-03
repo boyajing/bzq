@@ -49,4 +49,12 @@ public class ExpenseService extends AbstrctDBInf {
     public int update(TExpenseDetail detail) {
         return this.getMapper(TExpenseDetailMapper.class).updateByPrimaryKeySelective(detail);
     }
+
+    public int delete(BigDecimal id) {
+        return this.getMapper(TExpenseDetailMapper.class).deleteByPrimaryKey(id);
+    }
+
+    public TExpenseDetail selectMaxElec() {
+        return this.getMapper(TExpenseDetailMapper.class).selectMaxElec();
+    }
 }

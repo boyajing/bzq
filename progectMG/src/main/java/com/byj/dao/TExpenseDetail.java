@@ -1,9 +1,50 @@
 package com.byj.dao;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-public class TExpenseDetail {
+public class TExpenseDetail implements Serializable{
+    private BigDecimal YCquantity;
+
+    private BigDecimal HBquantity;
+
+    private BigDecimal YCtotalPrice;
+
+    private BigDecimal HBtotalPrice;
+
+    public BigDecimal getYCquantity() {
+        return YCquantity;
+    }
+
+    public void setYCquantity(BigDecimal YCquantity) {
+        this.YCquantity = YCquantity;
+    }
+
+    public BigDecimal getHBquantity() {
+        return HBquantity;
+    }
+
+    public void setHBquantity(BigDecimal HBquantity) {
+        this.HBquantity = HBquantity;
+    }
+
+    public BigDecimal getYCtotalPrice() {
+        return YCtotalPrice;
+    }
+
+    public void setYCtotalPrice(BigDecimal YCtotalPrice) {
+        this.YCtotalPrice = YCtotalPrice;
+    }
+
+    public BigDecimal getHBtotalPrice() {
+        return HBtotalPrice;
+    }
+
+    public void setHBtotalPrice(BigDecimal HBtotalPrice) {
+        this.HBtotalPrice = HBtotalPrice;
+    }
+
     private BigDecimal id;
 
     private String expenseNo;
