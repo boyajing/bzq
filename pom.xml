@@ -24,7 +24,7 @@
 		<activiti.version>5.22.0</activiti.version>
 		<mybatis.version>3.3.0</mybatis.version>
 		<slf4j.version>1.7.6</slf4j.version>
-		<poi.version>3.8</poi.version>
+		<poi.version>4.1.2</poi.version>
 		<org.apache.poi.xwpf.converter.version>1.0.4</org.apache.poi.xwpf.converter.version>
 		<itex.version>5.5.10</itex.version>
 		<axis2.version>1.6.2</axis2.version>
